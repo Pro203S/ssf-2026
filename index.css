@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Dajeong';
+    src: url("./assets/fonts/dajeong.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: 'LCD';
+    src: url("./assets/fonts/lcd.ttf") format("truetype");
+}
