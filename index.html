@@ -4,45 +4,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>슈의 라면가게</title>
-
+    <title>슈의 라면집</title>
     <link href="index.css" rel="stylesheet">
 </head>
 
 <body>
-    <div>
-        <div class="">
-            <div class="pot"></div>
-            <div class="fire"></div>
-        </div>
-        <div class="">
-            <div class="pot"></div>
-            <div class="fire"></div>
-        </div>
-        <div class="">
-            <div class="pot"></div>
-            <div class="fire"></div>
-        </div>
-        <div class="">
-            <div class="pot"></div>
-            <div class="fire"></div>
-        </div>
-    </div>
-    <div class="">
-        <div class="water_pot"></div>
-        <div class="fire"></div>
+    <div class="game">
+
+        <!-- 상단: 재료 선반 + 상태 + 점수 -->
+        <header class="header">
+            <aside class="ingredients">
+                <img class="ingredient" src="https://placehold.co/170x85/e74c3c/fff?text=스프" alt="라면 스프">
+                <img class="ingredient" src="https://placehold.co/170x85/f1c40f/333?text=면" alt="라면 면">
+                <img class="ingredient" src="https://placehold.co/170x85/2ecc71/fff?text=파" alt="파">
+                <img class="ingredient" src="https://placehold.co/170x85/3498db/fff?text=계란" alt="계란">
+            </aside>
+
+            <section class="status">
+                <div class="timer">
+                    <span class="label">Time</span>
+                    <div class="timer-bar">
+                        <div class="timer-fill"></div>
+                    </div>
+                </div>
+                <h1 class="title">
+                    <img src="https://placehold.co/24x24/ff69b4/fff?text=🌸" alt="" class="deco">
+                    슈의 라면집
+                    <img src="https://placehold.co/24x24/ff69b4/fff?text=🌸" alt="" class="deco">
+                </h1>
+            </section>
+
+            <aside class="scoreboard">
+                <div class="score-label">
+                    <img src="https://placehold.co/20x20/ff69b4/fff?text=♥" alt="">
+                    수입금
+                </div>
+                <div class="score-display">5200</div>
+            </aside>
+        </header>
+
+        <!-- 중간: 가스레인지 + 서빙 트레이 -->
+        <main class="kitchen">
+            <section class="stove">
+                <div class="burner">
+                    <img class="pot" src="https://placehold.co/80x70/f1c40f/333?text=냄비" alt="냄비">
+                    <img class="fire" src="https://placehold.co/60x40/ff6600/fff?text=🔥" alt="불">
+                </div>
+                <div class="burner">
+                    <img class="pot" src="https://placehold.co/80x70/f1c40f/333?text=냄비" alt="냄비">
+                    <img class="fire" src="https://placehold.co/60x40/ff6600/fff?text=🔥" alt="불">
+                </div>
+                <div class="burner active">
+                    <img class="pot" src="https://placehold.co/80x70/f1c40f/333?text=냄비" alt="냄비">
+                    <img class="fire" src="https://placehold.co/60x40/ff6600/fff?text=🔥" alt="불">
+                </div>
+                <div class="burner">
+                    <img class="pot" src="https://placehold.co/80x70/f1c40f/333?text=냄비" alt="냄비">
+                    <img class="fire" src="https://placehold.co/60x40/ff6600/fff?text=🔥" alt="불">
+                </div>
+                <div class="burner kettle-burner active">
+                    <img class="kettle" src="https://placehold.co/90x80/ffd700/333?text=주전자" alt="주전자">
+                    <img class="fire" src="https://placehold.co/60x40/ff6600/fff?text=🔥" alt="불">
+                </div>
+            </section>
+
+            <aside class="serving">
+                <div class="wall">
+                    <img src="https://placehold.co/40x40/ccc/666?text=🥄" alt="주걱">
+                    <img src="https://placehold.co/40x40/ccc/666?text=🍳" alt="뒤집개">
+                    <img src="https://placehold.co/40x40/ccc/666?text=🥢" alt="국자">
+                </div>
+                <div class="tray">
+                    <img src="https://placehold.co/50x30/ff8c00/fff?text=젓가락" alt="젓가락">
+                    <img src="https://placehold.co/50x40/fff/333?text=단무지" alt="단무지">
+                </div>
+            </aside>
+        </main>
+
+        <!-- 하단: 조절 노브 + 안내 메모 -->
+        <footer class="footer">
+            <div class="knobs">
+                <img src="https://placehold.co/48x48/ff69b4/fff?text=●" alt="노브">
+                <img src="https://placehold.co/48x48/ff69b4/fff?text=●" alt="노브">
+                <img src="https://placehold.co/48x48/ff69b4/fff?text=●" alt="노브">
+                <img src="https://placehold.co/48x48/ff69b4/fff?text=●" alt="노브">
+            </div>
+            <div class="notes">
+                <div class="note note-yellow">맛에 따라 돈을 내는 슈의 라면집!!!</div>
+                <div class="note note-blue">라면: 1,000원</div>
+            </div>
+        </footer>
+
     </div>
 
-    <div class="shelving">
-        <div class="soup"></div>
-        <div class="scallions"></div>
-        <div class="noodle"></div>
-        <div class="egg"></div>
-    </div>
-
-    <div class="customer"></div>
-
-    <!-- 아래 library.js import 빈칸으로 뚫어놓기 -->
     <script src="library.js" defer></script>
     <script src="index.js" defer></script>
 </body>
