@@ -1,13 +1,27 @@
+/* 다정체 - 본문용 */
 @font-face {
     font-family: 'Dajeong';
     src: url("./assets/fonts/dajeong.ttf") format("truetype");
 }
 
+/* 점수판 숫자용 */
 @font-face {
     font-family: 'LCD';
     src: url("./assets/fonts/lcd.ttf") format("truetype");
 }
 
+/* 자주 쓰는 색 모아둠 */
+:root {
+    --pink: #ff69b4;
+    --pink-dark: #ff1493;
+    --pink-light: #ffd6ec;
+    --pink-bg: #ffb6d9;
+    --page-bg: #ffc0e0;
+    --purple: #7b3fa0;
+    --purple-dark: #4a2060;
+}
+
+/* 기본 리셋 */
 * {
     margin: 0;
     padding: 0;
@@ -15,53 +29,48 @@
 }
 
 body {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background: #ffc0e0;
+    background: var(--page-bg);
     font-family: 'Dajeong', sans-serif;
 }
 
+/* 게임 박스 */
 .game {
     width: 780px;
-    background: #ffb6d9;
-    border: 4px solid #ff69b4;
+    background: var(--pink-bg);
+    border: 4px solid var(--pink);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(255, 105, 180, 0.4);
 }
 
-/* ── Header ── */
-
+/* --- 위쪽 --- */
 .header {
     display: grid;
     grid-template-columns: 346px 1fr 140px;
     gap: 8px;
     padding: 12px;
-    background: #ffd6ec;
-    align-items: start;
+    background: var(--pink-light);
 }
 
 .ingredients {
-    --ingredient-height: 85px;
-    --ingredient-width: calc(var(--ingredient-height) * 2);
-    --ingredient-gap: 6px;
-
     display: grid;
-    grid-template-columns: repeat(2, var(--ingredient-width));
-    grid-template-rows: repeat(2, var(--ingredient-height));
-    gap: var(--ingredient-gap);
-    width: calc(var(--ingredient-width) * 2 + var(--ingredient-gap));
+    grid-template-columns: repeat(2, 170px);
+    grid-template-rows: repeat(2, 85px);
+    gap: 6px;
+    width: 346px;
 }
 
 .ingredient {
-    display: block;
-    width: var(--ingredient-width);
-    height: var(--ingredient-height);
-    object-fit: cover;
-    border-radius: 4px;
+    width: 170px;
+    height: 85px;
+    background: #fff;
     border: 2px solid #e8a0c0;
+    border-radius: 4px;
+    object-fit: cover;
 }
 
 .status {
@@ -79,71 +88,60 @@ body {
 .timer {
     width: 100%;
     max-width: 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
+    text-align: center;
 }
 
 .timer-bar {
     width: 100%;
     height: 14px;
+    margin-top: 2px;
     background: #fff;
-    border: 2px solid #ff69b4;
+    border: 2px solid var(--pink);
     border-radius: 7px;
     overflow: hidden;
 }
 
 .timer-fill {
-    width: 65%;
+    width: 65%;  /* 나중에 js로 줄여나갈 예정 */
     height: 100%;
-    background: linear-gradient(90deg, #ff69b4, #ff1493);
+    background: var(--pink);
     border-radius: 5px;
 }
 
 .title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
     font-size: 22px;
     color: #fff;
-    background: #ff69b4;
+    background: var(--pink);
     padding: 6px 20px;
+    border: 3px solid var(--pink-dark);
     border-radius: 20px;
-    border: 3px solid #ff1493;
     text-shadow: 1px 1px 0 #c04080;
 }
 
 .scoreboard {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
+    text-align: center;
 }
 
 .score-label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
     font-size: 13px;
-    color: #ff69b4;
+    color: var(--pink);
 }
 
 .score-display {
     width: 120px;
+    margin-top: 4px;
     padding: 8px 12px;
-    background: #4a2060;
+    background: var(--purple-dark);
     color: #0f0;
     font-family: 'LCD', monospace;
     font-size: 28px;
     text-align: right;
+    border: 3px solid var(--purple);
     border-radius: 6px;
-    border: 3px solid #7b3fa0;
     letter-spacing: 2px;
 }
 
-/* ── Kitchen ── */
-
+/* --- 가운데 --- */
 .kitchen {
     display: grid;
     grid-template-columns: 1fr 160px;
@@ -151,32 +149,21 @@ body {
 }
 
 .stove {
-    --burner-gap: 16px;
-
     display: grid;
     grid-template-columns: repeat(3, 140px);
     grid-template-rows: repeat(2, 140px);
-    gap: var(--burner-gap);
+    gap: 16px;
     justify-content: center;
     align-content: center;
     padding: 20px;
     background: #ff8fc7;
 }
 
+/* 주전자만 오른쪽에 길게 붙음 */
 .kettle-burner {
     grid-column: 3;
-    grid-row: 1 / -1;
+    grid-row: 1 / span 2;
     align-self: center;
-}
-
-.stove .burner:nth-child(1) { grid-column: 1; grid-row: 1; }
-.stove .burner:nth-child(2) { grid-column: 2; grid-row: 1; }
-.stove .burner:nth-child(3) { grid-column: 1; grid-row: 2; }
-.stove .burner:nth-child(4) { grid-column: 2; grid-row: 2; }
-
-.kettle-burner .kettle {
-    position: relative;
-    z-index: 2;
 }
 
 .burner {
@@ -185,18 +172,19 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #ff69b4;
-    border-radius: 50%;
     width: 140px;
     height: 140px;
-    border: 4px solid #ff1493;
+    background: var(--pink);
+    border: 4px solid var(--pink-dark);
+    border-radius: 50%;
 }
 
 .burner.active {
-    background: radial-gradient(circle, #ffb347 30%, #ff69b4 70%);
+    background: #ffb347;  /* 불 켜진 상태 */
 }
 
-.burner .pot {
+.burner .pot,
+.burner .kettle {
     position: relative;
     z-index: 2;
 }
@@ -214,13 +202,13 @@ body {
 }
 
 .burner .fire.hidden {
-    opacity: 0.15;
+    opacity: 0.15;  /* 불 꺼짐 */
 }
 
 .serving {
     display: flex;
     flex-direction: column;
-    background: #f5e6d0 url("https://placehold.co/160x320/f5e6d0/ffb6c1?text=♥") repeat;
+    background: #f5e6d0;
     border-left: 3px solid #e8c8a0;
 }
 
@@ -239,20 +227,19 @@ body {
     justify-content: center;
     gap: 12px;
     margin: 12px;
-    background: #7b3fa0;
-    border-radius: 8px;
     padding: 16px;
+    background: var(--purple);
+    border-radius: 8px;
 }
 
-/* ── Footer ── */
-
+/* --- 아래쪽 --- */
 .footer {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     padding: 12px 20px;
-    background: #ff69b4;
-    border-top: 4px solid #ff1493;
+    background: var(--pink);
+    border-top: 4px solid var(--pink-dark);
 }
 
 .knobs {
@@ -261,8 +248,8 @@ body {
 }
 
 .knobs img {
+    border: 3px solid var(--pink-dark);
     border-radius: 50%;
-    border: 3px solid #ff1493;
 }
 
 .notes {
@@ -272,10 +259,10 @@ body {
 }
 
 .note {
+    max-width: 220px;
     padding: 6px 12px;
     font-size: 12px;
     border-radius: 4px;
-    max-width: 220px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
 }
 
