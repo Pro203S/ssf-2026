@@ -3,11 +3,11 @@
 
 /**
  * HTML의 요소를 선택자로 가져오는 함수
- * 
+ *
  * @param {keyof HTMLElementTagNameMap} selector 선택자
  * @returns HTML 요소
  */
-const $ = (selector) => {
+export const $ = (selector) => {
     /** @type {HTMLElement} */
     const a = document.querySelector(selector);
 
@@ -15,59 +15,59 @@ const $ = (selector) => {
         ...a,
         /**
          * 요소에 이벤트 리스너를 추가하는 함수
-         * 
+         *
          * @param {keyof HTMLElementEventMap} type
          * @param {(ev: Event) => any} callback
-         * 
+         *
          * @return {() => any} 이벤트 리스너 삭제
          */
         addEventListener: (type, callback) => {
-            // 아주잘알고있는이벤트리스너
             a.addEventListener(type, callback);
-
-            // 이벤트 리스너 삭제하는 함수 return
             return () => a.removeEventListener(type, callback);
-        }
-    };  
-}
+        },
+    };
+};
 
 /**
- * 주전자를 클릭하면 마우스를 따라가고, 냄비를 클릭하면 물을 채우는 기능
+ * @typedef {Object} DragFollowOptions
+ * @property {HTMLElement} [home] 마우스를 뗐을 때 돌아갈 부모 (기본: element.parentElement)
+ * @property {(ev: MouseEvent) => HTMLElement | false | null | void} [onDragEnd] 뗄 때 호출. false면 배치 생략
  */
-const initKettlePour = () => {
-    /** @type {HTMLImageElement | null} */
-    const kettle = document.querySelector('.kettle');
-    if (!kettle) {
-        return {
-            isPouring: () => false,
-            fillPot: () => {},
-        };
-    }
 
-    const homeBurner = kettle.parentElement;
-    if (!(homeBurner instanceof HTMLElement)) {
-        return {
-            isPouring: () => false,
-            fillPot: () => {},
-        };
-    }
+/**
+ * 마우스를 누르고 있는 동안만 따라가고, 떼면 원래 자리로 돌아가는 드래그
+ *
+ * @param {HTMLElement} element
+ * @param {DragFollowOptions} [options]
+ */
+export const createDragFollow = (element, options = {}) => {
+    const home =
+        options.home instanceof HTMLElement ? options.home : element.parentElement;
 
     /** @type {{ offsetX: number; offsetY: number } | null} */
     let dragState = null;
 
-    const resetKettleStyles = () => {
-        kettle.style.position = '';
-        kettle.style.zIndex = '';
-        kettle.style.left = '';
-        kettle.style.top = '';
-        kettle.style.width = '';
-        kettle.style.height = '';
-        kettle.style.cursor = 'grab';
+    const resetStyles = () => {
+        element.style.position = '';
+        element.style.zIndex = '';
+        element.style.left = '';
+        element.style.top = '';
+        element.style.width = '';
+        element.style.height = '';
+        element.style.cursor = 'grab';
     };
 
-    const returnKettleHome = () => {
-        resetKettleStyles();
-        homeBurner.appendChild(kettle);
+    /**
+     * @param {HTMLElement} parent
+     */
+    const placeIn = (parent) => {
+        resetStyles();
+        parent.appendChild(element);
+    };
+
+    const cleanupListeners = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
     };
 
     /**
@@ -76,205 +76,63 @@ const initKettlePour = () => {
     const onMouseMove = (ev) => {
         if (!dragState) return;
 
-        kettle.style.left = `${ev.clientX - dragState.offsetX}px`;
-        kettle.style.top = `${ev.clientY - dragState.offsetY}px`;
-    };
-
-    const stopDrag = () => {
-        if (!dragState) return;
-
-        dragState = null;
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('click', onClickAway, true);
+        element.style.left = `${ev.clientX - dragState.offsetX}px`;
+        element.style.top = `${ev.clientY - dragState.offsetY}px`;
     };
 
     /**
      * @param {MouseEvent} ev
      */
-    const onClickAway = (ev) => {
+    const onMouseUp = (ev) => {
         if (!dragState) return;
-        if (ev.target === kettle) return;
 
-        const target = ev.target instanceof Element ? ev.target : null;
-        if (target?.closest('.burner') === homeBurner) {
-            returnKettleHome();
-            stopDrag();
+        dragState = null;
+        cleanupListeners();
+
+        const placement = options.onDragEnd?.(ev);
+        if (placement === false) return;
+
+        const target =
+            placement instanceof HTMLElement ? placement : home;
+
+        if (target instanceof HTMLElement) {
+            placeIn(target);
         }
     };
 
-    kettle.style.cursor = 'grab';
-
-    kettle.addEventListener('click', (e) => {
-        e.stopPropagation();
-
+    /**
+     * @param {MouseEvent} e
+     */
+    const onMouseDown = (e) => {
+        e.preventDefault();
         if (dragState) return;
 
-        const rect = kettle.getBoundingClientRect();
+        const rect = element.getBoundingClientRect();
 
         dragState = {
             offsetX: e.clientX - rect.left,
             offsetY: e.clientY - rect.top,
         };
 
-        kettle.style.position = 'fixed';
-        kettle.style.zIndex = '1000';
-        kettle.style.cursor = 'grabbing';
-        kettle.style.left = `${rect.left}px`;
-        kettle.style.top = `${rect.top}px`;
-        kettle.style.width = `${rect.width}px`;
-        kettle.style.height = `${rect.height}px`;
+        element.style.position = 'fixed';
+        element.style.zIndex = '1000';
+        element.style.cursor = 'grabbing';
+        element.style.left = `${rect.left}px`;
+        element.style.top = `${rect.top}px`;
+        element.style.width = `${rect.width}px`;
+        element.style.height = `${rect.height}px`;
 
         document.addEventListener('mousemove', onMouseMove);
-        setTimeout(() => {
-            document.addEventListener('click', onClickAway, true);
-        }, 0);
-    });
+        document.addEventListener('mouseup', onMouseUp);
+    };
+
+    element.style.cursor = 'grab';
+    element.addEventListener('mousedown', onMouseDown);
 
     return {
-        isPouring: () => dragState !== null,
-        /**
-         * @param {HTMLImageElement} pot
-         */
-        fillPot: (pot) => {
-            pot.classList.add('has-water');
-        },
+        element,
+        isDragging: () => dragState !== null,
+        placeIn,
+        detach: () => element.removeEventListener('mousedown', onMouseDown),
     };
 };
-
-/**
- * 냄비를 클릭하면 마우스 커서를 계속 따라가게 하는 기능
- * @param {{ isPouring: () => boolean; fillPot: (pot: HTMLImageElement) => void }} kettlePour
- */
-const initPotDrag = (kettlePour) => {
-    /** @type {NodeListOf<HTMLImageElement>} */
-    const pots = document.querySelectorAll('.pot');
-
-    /** @type {WeakMap<HTMLImageElement, HTMLElement>} */
-    const potHomeBurners = new WeakMap();
-
-    /** @type {{ pot: HTMLImageElement; offsetX: number; offsetY: number } | null} */
-    let dragState = null;
-
-    /**
-     * @param {HTMLImageElement} pot
-     */
-    const resetPotStyles = (pot) => {
-        pot.style.position = '';
-        pot.style.zIndex = '';
-        pot.style.left = '';
-        pot.style.top = '';
-        pot.style.width = '';
-        pot.style.height = '';
-        pot.style.cursor = 'grab';
-    };
-
-    /**
-     * @param {HTMLImageElement} pot
-     * @param {HTMLElement} homeBurner
-     */
-    const returnPotHome = (pot, homeBurner) => {
-        resetPotStyles(pot);
-        homeBurner.appendChild(pot);
-    };
-
-    /**
-     * @param {HTMLImageElement} pot
-     * @param {HTMLElement} serving
-     */
-    const placePotOnServing = (pot, serving) => {
-        resetPotStyles(pot);
-        const tray = serving.querySelector('.tray');
-        (tray ?? serving).appendChild(pot);
-    };
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    const onMouseMove = (ev) => {
-        if (!dragState) return;
-
-        const { pot, offsetX, offsetY } = dragState;
-        pot.style.left = `${ev.clientX - offsetX}px`;
-        pot.style.top = `${ev.clientY - offsetY}px`;
-    };
-
-    const stopDrag = () => {
-        if (!dragState) return;
-
-        dragState = null;
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('click', onClickAway, true);
-    };
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    const onClickAway = (ev) => {
-        if (!dragState) return;
-        if (ev.target === dragState.pot) return;
-
-        const target = ev.target instanceof Element ? ev.target : null;
-        const serving = target?.closest('.serving');
-        const burner = target?.closest('.burner');
-
-        if (serving instanceof HTMLElement) {
-            placePotOnServing(dragState.pot, serving);
-            stopDrag();
-            return;
-        }
-
-        if (burner instanceof HTMLElement) {
-            const homeBurner = potHomeBurners.get(dragState.pot);
-            if (homeBurner) returnPotHome(dragState.pot, homeBurner);
-            stopDrag();
-        }
-    };
-
-    pots.forEach((pot) => {
-        const parent = pot.parentElement;
-        if (parent instanceof HTMLElement && parent.classList.contains('burner')) {
-            potHomeBurners.set(pot, parent);
-        }
-
-        pot.style.cursor = 'grab';
-
-        pot.addEventListener('click', (e) => {
-            e.stopPropagation();
-
-            if (kettlePour.isPouring()) {
-                kettlePour.fillPot(pot);
-                return;
-            }
-
-            if (dragState?.pot === pot) return;
-
-            if (dragState) stopDrag();
-
-            const rect = pot.getBoundingClientRect();
-
-            dragState = {
-                pot,
-                offsetX: e.clientX - rect.left,
-                offsetY: e.clientY - rect.top,
-            };
-
-            pot.style.position = 'fixed';
-            pot.style.zIndex = '1000';
-            pot.style.cursor = 'grabbing';
-            pot.style.left = `${rect.left}px`;
-            pot.style.top = `${rect.top}px`;
-            pot.style.width = `${rect.width}px`;
-            pot.style.height = `${rect.height}px`;
-
-            document.addEventListener('mousemove', onMouseMove);
-            setTimeout(() => {
-                document.addEventListener('click', onClickAway, true);
-            }, 0);
-        });
-    });
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    const kettlePour = initKettlePour();
-    initPotDrag(kettlePour);
-});
