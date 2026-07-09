@@ -58,6 +58,16 @@ const clickZones = [
   { id: 6, x: 5, y: 270, width: 90, height: 70 },
 ];
 
+const pourPositions = [
+  { bottom: "205px", left: "20px" },
+  { bottom: "130px", left: "-20px" },
+  { bottom: "130px", left: "120px" },
+  { bottom: "205px", left: "155px" },
+];
+
+// 넣는 순서와 관계없이 면 -> 계란 -> 파 -> 스프 순으로 보여줌
+const INGREDIENT_ORDER = [1, 0, 3, 2];
+
 function getTargetZone(mouseX, mouseY) {
   return clickZones.find(
     (zone) =>
@@ -66,6 +76,93 @@ function getTargetZone(mouseX, mouseY) {
       mouseY >= zone.y &&
       mouseY <= zone.y + zone.height,
   );
+}
+
+function updateWaterLayer(potIndex) {
+  const water = document.querySelector(`.n${potIndex + 1}-water`);
+  if (!water) return;
+
+  if (!nambiStatus[potIndex][4]) {
+    water.style.display = "none";
+    return;
+  }
+
+  water.style.display = "block";
+  water.classList.toggle("has-soup", !!nambiStatus[potIndex][2]);
+}
+
+function createSoupDots(potIndex) {
+  const dots = document.createElement("div");
+  dots.className = "soup-dots pot-item";
+  dots.dataset.pot = potIndex;
+
+  const positions = [
+    [22, 38],
+    [38, 32],
+    [52, 40],
+    [30, 52],
+    [46, 48],
+    [58, 52],
+    [34, 62],
+    [50, 58],
+    [42, 42],
+    [56, 44],
+  ];
+
+  for (const [left, top] of positions) {
+    const dot = document.createElement("span");
+    dot.className = "soup-dot";
+    dot.style.left = `${left}%`;
+    dot.style.top = `${top}%`;
+    dots.appendChild(dot);
+  }
+
+  return dots;
+}
+
+function refreshPot(potIndex) {
+  const clip = document.querySelector(`.n${potIndex + 1}-clip`);
+  clip
+    .querySelectorAll(`.pot-item[data-pot="${potIndex}"]`)
+    .forEach((el) => el.remove());
+
+  for (const ingId of INGREDIENT_ORDER) {
+    if (!nambiStatus[potIndex][ingId]) continue;
+
+    if (ingId === 2) {
+      clip.appendChild(createSoupDots(potIndex));
+      continue;
+    }
+
+    const nambiIndi = document.createElement("img");
+    nambiIndi.className = "indi pot-item";
+    nambiIndi.dataset.pot = potIndex;
+    nambiIndi.src = `assets/images/game_assets/${nambiImageMap[ingId]}`;
+    clip.appendChild(nambiIndi);
+  }
+
+  updateWaterLayer(potIndex);
+}
+
+function resetCursor() {
+  activeZoneId = null;
+  jujeonja.style.display = "block";
+  cursorImage.style.display = "none";
+}
+
+function pourWater(potIndex) {
+  const pourEl = document.createElement("img");
+  pourEl.className = "pour-animation";
+  pourEl.src = "assets/images/game_assets/jujeonja_ddara.png";
+  const pos = pourPositions[potIndex];
+  pourEl.style.bottom = pos.bottom;
+  pourEl.style.left = pos.left;
+  gameContainer.appendChild(pourEl);
+
+  setTimeout(() => {
+    pourEl.remove();
+    refreshPot(potIndex);
+  }, 600);
 }
 
 contentElement.addEventListener("click", function (event) {
@@ -81,20 +178,26 @@ contentElement.addEventListener("click", function (event) {
       3 >= activeZoneId &&
       5 <= clickedZone.id &&
       8 >= clickedZone.id &&
-      activeZoneId != null &&
-      activeZoneId != 2
+      activeZoneId != null
     ) {
-      // 아이템 -> 냄비 떄
-      if (!nambiStatus[clickedZone.id - 5][activeZoneId]) {
-        nambiStatus[clickedZone.id - 5][activeZoneId] = 1;
-        const nambiIndi = document.createElement("img");
-
-        nambiIndi.className = `indi n${clickedZone.id - 4}-indi`;
-        nambiIndi.src = `assets/images/game_assets/${nambiImageMap[activeZoneId]}`;
-
-        gameContainer.appendChild(nambiIndi);
-
+      // 아이템 -> 냄비 때
+      const potIndex = clickedZone.id - 5;
+      if (!nambiStatus[potIndex][activeZoneId]) {
+        nambiStatus[potIndex][activeZoneId] = 1;
+        refreshPot(potIndex);
         activeZoneId = null;
+      }
+    } else if (
+      activeZoneId === 4 &&
+      5 <= clickedZone.id &&
+      8 >= clickedZone.id
+    ) {
+      // 주전자 -> 냄비 때
+      const potIndex = clickedZone.id - 5;
+      if (!nambiStatus[potIndex][4]) {
+        nambiStatus[potIndex][4] = 1;
+        pourWater(potIndex);
+        resetCursor();
       }
     } else if (5 <= clickedZone.id && 8 >= clickedZone.id) {
       //레전드 빈 코드

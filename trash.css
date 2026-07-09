@@ -106,22 +106,123 @@ canvas {
   pointer-events: none;
 }
 
-.n1-indi {
-  bottom: 205px;
-  left: 45px;
+.pot-clip {
+  position: absolute;
+  width: 116px;
+  height: 73px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
 }
 
-.n2-indi {
-  bottom: 130px;
-  left: 7px;
+.n1-clip {
+  bottom: 195px;
+  left: 30px;
 }
 
-.n3-indi {
-  bottom: 130px;
-  left: 150px;
+.n2-clip {
+  bottom: 120px;
+  left: -7px;
 }
 
-.n4-indi {
-  bottom: 205px;
-  left: 183px;
+.n3-clip {
+  bottom: 120px;
+  left: 132px;
+}
+
+.n4-clip {
+  bottom: 195px;
+  left: 167px;
+}
+
+.n1-clip .indi,
+.n1-clip .soup-dots {
+  left: 15px;
+  bottom: 10px;
+}
+
+.n2-clip .indi,
+.n2-clip .soup-dots {
+  left: 14px;
+  bottom: 10px;
+}
+
+.n3-clip .indi,
+.n3-clip .soup-dots {
+  left: 18px;
+  bottom: 10px;
+}
+
+.n4-clip .indi,
+.n4-clip .soup-dots {
+  left: 16px;
+  bottom: 10px;
+}
+
+.nambi-guard {
+  position: absolute;
+  pointer-events: none;
+  z-index: 9;
+  width: 116px;
+  height: 73px;
+}
+
+.soup-dots {
+  position: absolute;
+  width: 85px;
+  height: 68px;
+}
+
+.soup-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e85a20;
+  box-shadow: 0 0 1px #c04010;
+  transform: translate(-50%, -50%);
+}
+
+/* 냄비 안쪽 타원 — nambi_watered.png 픽셀 기준 (left+21 / bottom+30, 74x36) */
+.water-layer {
+  position: absolute;
+  pointer-events: none;
+  z-index: 8;
+  width: 74px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(90, 170, 240, 0.45);
+  display: none;
+}
+
+.water-layer.has-soup {
+  background: rgba(230, 130, 50, 0.5);
+}
+
+.n1-water {
+  bottom: calc(195px + 30px);
+  left: calc(30px + 21px);
+}
+
+.n2-water {
+  bottom: calc(120px + 30px);
+  left: calc(-7px + 21px);
+}
+
+.n3-water {
+  bottom: calc(120px + 30px);
+  left: calc(132px + 21px);
+}
+
+.n4-water {
+  bottom: calc(195px + 30px);
+  left: calc(167px + 21px);
+}
+
+.pour-animation {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+  width: 120px;
+  height: auto;
 }
