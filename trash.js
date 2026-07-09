@@ -67,6 +67,16 @@ const clickZones = [
     { id: 6, x: 5, y: 270, width: 90, height: 70 },     // 2번 냄비, 왼쪽 아래
 ];
 
+const pourPositions = [
+    { bottom: "205px", left: "20px" },
+    { bottom: "130px", left: "-20px" },
+    { bottom: "130px", left: "120px" },
+    { bottom: "205px", left: "155px" },
+];
+
+// 넣는 순서와 관계없이 면 -> 계란 -> 파 -> 스프 순으로 보여줌
+const INGREDIENT_ORDER = [1, 0, 3, 2];
+
 function getTargetZone(mouseX, mouseY) {
     return clickZones.find(
         (zone) =>
@@ -77,6 +87,95 @@ function getTargetZone(mouseX, mouseY) {
     );
 }
 
+function updateWaterLayer(cookingPotIndex) {
+    const cookingPotNumber = cookingPotIndex + 1;
+    const water = document.querySelector(`.pot${cookingPotNumber}-water`);
+    if (!water) return;
+
+    if (!cookingPotStatus[cookingPotIndex][4]) {
+        water.style.display = "none";
+        return;
+    }
+
+    water.style.display = "block";
+    water.classList.toggle("has-soup", !!cookingPotStatus[cookingPotIndex][2]);
+}
+
+function createSoupDots(cookingPotIndex) {
+    const dots = document.createElement("div");
+    dots.className = "soup-dots cooking-pot-item";
+    dots.dataset.cookingPot = cookingPotIndex;
+
+    const positions = [
+        [22, 38],
+        [38, 32],
+        [52, 40],
+        [30, 52],
+        [46, 48],
+        [58, 52],
+        [34, 62],
+        [50, 58],
+        [42, 42],
+        [56, 44],
+    ];
+
+    for (const [left, top] of positions) {
+        const dot = document.createElement("span");
+        dot.className = "soup-dot";
+        dot.style.left = `${left}%`;
+        dot.style.top = `${top}%`;
+        dots.appendChild(dot);
+    }
+
+    return dots;
+}
+
+function refreshCookingPot(cookingPotIndex) {
+    const cookingPotNumber = cookingPotIndex + 1;
+    const clip = document.querySelector(`.pot${cookingPotNumber}-clip`);
+    clip
+        .querySelectorAll(`.cooking-pot-item[data-cooking-pot="${cookingPotIndex}"]`)
+        .forEach((el) => el.remove());
+
+    for (const ingredientId of INGREDIENT_ORDER) {
+        if (!cookingPotStatus[cookingPotIndex][ingredientId]) continue;
+
+        if (ingredientId === 2) {
+            clip.appendChild(createSoupDots(cookingPotIndex));
+            continue;
+        }
+
+        const cookingPotIndicator = document.createElement("img");
+        cookingPotIndicator.className = "indicator cooking-pot-item";
+        cookingPotIndicator.dataset.cookingPot = cookingPotIndex;
+        cookingPotIndicator.src = `assets/images/game_assets/${ingredientInCookingPotImageMap[ingredientId]}`;
+        clip.appendChild(cookingPotIndicator);
+    }
+
+    updateWaterLayer(cookingPotIndex);
+}
+
+function resetCursor() {
+    activeZoneId = null;
+    pot.style.display = "block";
+    cursorImage.style.display = "none";
+}
+
+function pourWater(cookingPotIndex) {
+    const pourEl = document.createElement("img");
+    pourEl.className = "pour-animation";
+    pourEl.src = "assets/images/game_assets/pot_pouring.png";
+    const pos = pourPositions[cookingPotIndex];
+    pourEl.style.bottom = pos.bottom;
+    pourEl.style.left = pos.left;
+    gameContainer.appendChild(pourEl);
+
+    setTimeout(() => {
+        pourEl.remove();
+        refreshCookingPot(cookingPotIndex);
+    }, 600);
+}
+
 contentElement.addEventListener("click", function (event) {
     const rect = contentElement.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
@@ -85,28 +184,31 @@ contentElement.addEventListener("click", function (event) {
     const clickedZone = getTargetZone(mouseX, mouseY);
 
     if (clickedZone !== undefined) {
+        const cookingPotIndex = clickedZone.id - 5;
+
         // 재료(id 0~3)를 들고 냄비(id 5~8)를 클릭한 경우.
-        // 현재 조건에서는 스프(id 2)는 냄비에 바로 추가하지 않는다.
         if (
             0 <= activeZoneId &&
             3 >= activeZoneId &&
             5 <= clickedZone.id &&
             8 >= clickedZone.id &&
-            activeZoneId != null &&
-            activeZoneId != 2
+            activeZoneId != null
         ) {
-            // clickedZone.id - 5는 cookingPotStatus에서의 냄비 인덱스다.
-            if (!cookingPotStatus[clickedZone.id - 5][activeZoneId]) {
-                cookingPotStatus[clickedZone.id - 5][activeZoneId] = 1;
-                const cookingPotIndicator = document.createElement("img");
-
-                // clickedZone.id - 4는 CSS의 pot1-indicator ~ pot4-indicator 번호와 맞춘다.
-                cookingPotIndicator.className = `indicator pot${clickedZone.id - 4}-indicator`;
-                cookingPotIndicator.src = `assets/images/game_assets/${ingredientInCookingPotImageMap[activeZoneId]}`;
-
-                gameContainer.appendChild(cookingPotIndicator);
-
+            if (!cookingPotStatus[cookingPotIndex][activeZoneId]) {
+                cookingPotStatus[cookingPotIndex][activeZoneId] = 1;
+                refreshCookingPot(cookingPotIndex);
                 activeZoneId = null;
+            }
+        } else if (
+            activeZoneId === 4 &&
+            5 <= clickedZone.id &&
+            8 >= clickedZone.id
+        ) {
+            // 주전자를 들고 냄비를 클릭한 경우.
+            if (!cookingPotStatus[cookingPotIndex][4]) {
+                cookingPotStatus[cookingPotIndex][4] = 1;
+                pourWater(cookingPotIndex);
+                resetCursor();
             }
         } else if (5 <= clickedZone.id && 8 >= clickedZone.id) {
             // 냄비만 클릭한 경우. 추후 조리 상태 확인/완성 처리 등을 넣을 자리.
