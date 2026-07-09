@@ -33,23 +33,35 @@ body {
     user-select: none;
 }
 
+#game.is-tutorial .main-bg {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+#game.is-tutorial .main-pot {
+    display: none;
+}
+
 .main-pot {
     position: absolute;
     width: 140px;
     height: 140px;
     overflow: visible;
+    border: none;
+    background: transparent;
+    padding: 0;
     text-decoration: none;
     cursor: pointer;
     z-index: 2;
 }
 
 .main-pot--howto {
-    left: 108px;
+    left: 58px;
     top: 163px;
 }
 
 .main-pot--start {
-    left: 228px;
+    left: 178px;
     top: 163px;
 }
 

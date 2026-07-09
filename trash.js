@@ -374,10 +374,12 @@ contentElement.addEventListener("click", function (event) {
     if (clickedZone !== undefined) {
         const cookingPotIndex = clickedZone.id - 5;
 
-        if (clickedZone.id === 9 && heldCookingPotIndex !== null) {
-            const servedPotIndex = heldCookingPotIndex;
-            heldCookingPotIndex = null;
-            serveCookingPot(servedPotIndex);
+        if (clickedZone.id === 9) {
+            if (heldCookingPotIndex !== null) {
+                const servedPotIndex = heldCookingPotIndex;
+                heldCookingPotIndex = null;
+                serveCookingPot(servedPotIndex);
+            }
             return;
         }
 

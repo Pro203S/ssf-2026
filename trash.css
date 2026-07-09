@@ -279,11 +279,6 @@ canvas {
     gap: 4px;
     pointer-events: none;
     z-index: 15;
-    transition:
-        left 0.45s ease,
-        top 0.45s ease,
-        width 0.45s ease,
-        height 0.45s ease;
 }
 
 .hud-income-label {
