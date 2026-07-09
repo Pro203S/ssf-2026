@@ -69,9 +69,9 @@ let pots = [
 
 // ---------- 이미지 / 위치 데이터 ----------
 const backgrounds = {
-    game: 'url("assets/images/backgrounds/game.png")',
-    success: 'url("assets/images/backgrounds/good_end.png")',
-    failed: 'url("assets/images/backgrounds/bad_end.png")',
+    game: 'url("/assets/images/backgrounds/game.png")',
+    success: 'url("/assets/images/backgrounds/good_end.png")',
+    failed: 'url("/assets/images/backgrounds/bad_end.png")',
 };
 
 // 손에 들 때 커서에 붙는 이미지 (zone id 0~4)
@@ -228,7 +228,7 @@ function servePot(potIndex) {
 function pourWater(potIndex) {
     const pourImg = document.createElement("img");
     pourImg.className = "pour-animation";
-    pourImg.src = "assets/images/game_assets/pot_pouring.png";
+    pourImg.src = "/assets/images/game_assets/pot_pouring.png";
     pourImg.style.bottom = pourPositions[potIndex].bottom;
     pourImg.style.left = pourPositions[potIndex].left;
     gameContainer.appendChild(pourImg);
@@ -250,7 +250,7 @@ function holdItem(itemId, x, y) {
         cursorImage.style.maxWidth = "130px";
     }
 
-    cursorImage.src = "assets/images/game_assets/" + handImages[itemId];
+    cursorImage.src = "/assets/images/game_assets/" + handImages[itemId];
     cursorImage.style.display = "block";
     cursorImage.style.left = x + "px";
     cursorImage.style.top = y + "px";
