@@ -2,7 +2,7 @@ const contentElement = document.querySelector("canvas");
 const gameContainer = document.querySelector(".game-container");
 
 const cursorImage = document.getElementById("cursorImage");
-const jujeonja = document.getElementById("jujeonja");
+const pot = document.getElementById("pot");
 
 // 현재 마우스로 들고 있는 재료/도구의 clickZones id.
 // null이면 아무것도 들고 있지 않은 상태다.
@@ -10,7 +10,7 @@ let activeZoneId = null;
 
 // 냄비별 조리 상태.
 // 바깥 배열: 냄비 4개, 안쪽 배열: [달걀, 면, 수프, 파, 물, 끓이는 시간]
-let nambiStatus = [
+let cookingPotStatus = [
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
@@ -37,19 +37,19 @@ updateBackground(status);
 // clickZones id 0~4에 대응하는 커서 이미지.
 const imageMap = [
     "egg.png",
-    "myeon.png",
+    "noodles.png",
     "soup.png",
-    "fah.png",
-    "jujeonja_handle.png",
+    "green_onion.png",
+    "pot_handle.png",
 ];
 
 // 재료를 냄비에 넣었을 때 냄비 위에 표시할 이미지.
 // activeZoneId 0~3과 같은 순서다.
-const nambiImageMap = [
-    "egg_in_nambi.png",
-    "myeon_in_nambi.png",
-    "soup_in_nambi.png",
-    "fah_in_nambi.png",
+const ingredientInCookingPotImageMap = [
+    "egg_in_cooking_pot.png",
+    "noodles_in_cooking_pot.png",
+    "soup_in_cooking_pot.png",
+    "green_onion_in_cooking_pot.png",
 ];
 
 // 캔버스 기준 클릭 영역.
@@ -95,16 +95,16 @@ contentElement.addEventListener("click", function (event) {
             activeZoneId != null &&
             activeZoneId != 2
         ) {
-            // clickedZone.id - 5는 nambiStatus에서의 냄비 인덱스다.
-            if (!nambiStatus[clickedZone.id - 5][activeZoneId]) {
-                nambiStatus[clickedZone.id - 5][activeZoneId] = 1;
-                const nambiIndi = document.createElement("img");
+            // clickedZone.id - 5는 cookingPotStatus에서의 냄비 인덱스다.
+            if (!cookingPotStatus[clickedZone.id - 5][activeZoneId]) {
+                cookingPotStatus[clickedZone.id - 5][activeZoneId] = 1;
+                const cookingPotIndicator = document.createElement("img");
 
-                // clickedZone.id - 4는 CSS의 n1-indi ~ n4-indi 번호와 맞춘다.
-                nambiIndi.className = `indi n${clickedZone.id - 4}-indi`;
-                nambiIndi.src = `assets/images/game_assets/${nambiImageMap[activeZoneId]}`;
+                // clickedZone.id - 4는 CSS의 pot1-indicator ~ pot4-indicator 번호와 맞춘다.
+                cookingPotIndicator.className = `indicator pot${clickedZone.id - 4}-indicator`;
+                cookingPotIndicator.src = `assets/images/game_assets/${ingredientInCookingPotImageMap[activeZoneId]}`;
 
-                gameContainer.appendChild(nambiIndi);
+                gameContainer.appendChild(cookingPotIndicator);
 
                 activeZoneId = null;
             }
@@ -115,10 +115,10 @@ contentElement.addEventListener("click", function (event) {
             activeZoneId = clickedZone.id;
 
             if (activeZoneId == 4) {
-                jujeonja.style.display = "none";
+                pot.style.display = "none";
                 cursorImage.style.maxWidth = "none";
             } else {
-                jujeonja.style.display = "block";
+                pot.style.display = "block";
                 cursorImage.style.maxWidth = "130px";
             }
 

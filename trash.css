@@ -69,59 +69,59 @@ canvas {
     z-index: 20;
 }
 
-.nambi {
+.cooking-pot {
     position: absolute;
     pointer-events: none;
 }
 
-.n1 {
+.pot1 {
     bottom: 195px;
     left: 30px;
 }
 
-.n2 {
+.pot2 {
     bottom: 120px;
     left: -7px;
 }
 
-.n3 {
+.pot3 {
     bottom: 120px;
     left: 132px;
 }
 
-.n4 {
+.pot4 {
     bottom: 195px;
     left: 167px;
 }
 
-#jujeonja {
+#pot {
     position: absolute;
     pointer-events: none;
     bottom: 120px;
     right: 197px;
 }
 
-.indi {
+.indicator {
     position: absolute;
     pointer-events: none;
 }
 
-.n1-indi {
+.pot1-indicator {
     bottom: 205px;
     left: 45px;
 }
 
-.n2-indi {
+.pot2-indicator {
     bottom: 130px;
     left: 7px;
 }
 
-.n3-indi {
+.pot3-indicator {
     bottom: 130px;
     left: 150px;
 }
 
-.n4-indi {
+.pot4-indicator {
     bottom: 205px;
     left: 183px;
 }
