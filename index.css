@@ -6,9 +6,25 @@
 
 body {
     display: flex;
-    width: 100%;
-    height: 100vh;
+    width: 100vw;
+    height: 100dvh;
     justify-content: center;
     align-items: center;
     background-color: #fcf7d9;
+}
+
+/* Canvas와 팝업 요소를 감싸는 컨테이너 */
+.game-container {
+    position: relative;
+    width: 592px;
+    height: 476px;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: block;
 }
