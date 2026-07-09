@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-color: #fcf7d9;
+}
+
+/* Canvas와 팝업 요소를 감싸는 컨테이너 */
+.game-container {
+  position: relative;
+  width: 592px;
+  height: 476px;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  display: block;
+}
+
+/* 4개의 특정 요소 (기본값: 숨김) */
+.popup-element {
+  display: none;
+  position: absolute;
+  /* 아래 스타일은 예시입니다. 원하는 대로 디자인하세요 */
+  width: 200px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 2px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+
+  /* 화면 중앙 정렬 예시 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 활성화되었을 때 보여주는 클래스 */
+.popup-element.active {
+  display: block;
+}
+
+#cursorImage {
+  position: absolute;
+  width: auto;
+  height: auto;
+  min-width: 30px;
+  min-height: 30px;
+  max-width: 130px;
+  max-height: none;
+  object-fit: contain;
+
+  pointer-events: none;
+  display: none;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+.nambi {
+  position: absolute;
+  pointer-events: none;
+}
+
+.n1 {
+  bottom: 195px;
+  left: 30px;
+}
+
+.n2 {
+  bottom: 120px;
+  left: -7px;
+}
+
+.n3 {
+  bottom: 120px;
+  left: 132px;
+}
+
+.n4 {
+  bottom: 195px;
+  left: 167px;
+}
