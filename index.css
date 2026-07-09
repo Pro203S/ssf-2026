@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Friendly";
+    src: url("assets/fonts/friendly.ttf") format("truetype");
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -11,4 +16,128 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #fcf7d9;
+}
+
+#game {
+    position: relative;
+    width: 592px;
+    height: 476px;
+}
+
+.main-bg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+}
+
+#game.is-tutorial .main-bg {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+#game.is-tutorial .main-pot {
+    display: none;
+}
+
+.main-pot {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    overflow: visible;
+    border: none;
+    background: transparent;
+    padding: 0;
+    text-decoration: none;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.main-pot--howto {
+    left: 58px;
+    top: 163px;
+}
+
+.main-pot--start {
+    left: 178px;
+    top: 163px;
+}
+
+.main-pot-img {
+    position: absolute;
+    left: 12px;
+    bottom: 0;
+    width: 116px;
+    height: 73px;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+}
+
+.main-pot-label {
+    position: absolute;
+    left: 50%;
+    bottom: 90px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-family: "Friendly", sans-serif;
+    font-size: 18px;
+    line-height: 1.3;
+    color: #ff4da6;
+    text-shadow:
+        -1px -1px 0 #fff,
+        1px -1px 0 #fff,
+        -1px 1px 0 #fff,
+        1px 1px 0 #fff;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.main-pot-steam {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 1;
+}
+
+.main-pot .steam-1 {
+    left: 30px;
+    bottom: 68px;
+    width: 48px;
+    height: 35px;
+}
+
+.main-pot .steam-2 {
+    left: 70px;
+    bottom: 78px;
+    width: 31px;
+    height: 22px;
+}
+
+.main-pot:hover .main-pot-label,
+.main-pot:focus-visible .main-pot-label,
+.main-pot:hover .main-pot-steam,
+.main-pot:focus-visible .main-pot-steam {
+    opacity: 1;
+}
+
+.main-pot:hover .steam-1,
+.main-pot:focus-visible .steam-1 {
+    transform: translateY(-4px);
+}
+
+.main-pot:hover .steam-2,
+.main-pot:focus-visible .steam-2 {
+    transform: translateY(-6px);
+}
+
+.main-pot:focus-visible {
+    outline: 2px solid #ff4da6;
+    outline-offset: 4px;
 }

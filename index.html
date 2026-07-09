@@ -1,16 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>슈의 라면가게</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
     <div id="game">
-        
+        <img
+            id="mainBg"
+            class="main-bg"
+            src="assets/images/backgrounds/main.png"
+            alt="슈의 라면집"
+            draggable="false"
+        >
+
+        <button type="button" class="main-pot main-pot--howto" id="howtoBtn" aria-label="게임 설명">
+            <span class="main-pot-label">게임 설명</span>
+            <img class="main-pot-steam steam-1" src="assets/images/main_cooking_pot_steam_1.png" alt="" draggable="false">
+            <img class="main-pot-steam steam-2" src="assets/images/main_cooking_pot_steam_2.png" alt="" draggable="false">
+            <img class="main-pot-img" src="assets/images/game_assets/cooking_pot.png" alt="" draggable="false">
+        </button>
+
+        <a class="main-pot main-pot--start" href="trash.html" aria-label="게임시작">
+            <span class="main-pot-label">게임시작</span>
+            <img class="main-pot-steam steam-1" src="assets/images/main_cooking_pot_steam_1.png" alt="" draggable="false">
+            <img class="main-pot-steam steam-2" src="assets/images/main_cooking_pot_steam_2.png" alt="" draggable="false">
+            <img class="main-pot-img" src="assets/images/game_assets/cooking_pot.png" alt="" draggable="false">
+        </a>
     </div>
+
+    <script src="index.js"></script>
 </body>
 
 </html>
