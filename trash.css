@@ -273,18 +273,26 @@ canvas {
     left: 483px;
     top: 81px;
     width: 95px;
-    height: 22px;
-    overflow: hidden;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 4px;
     pointer-events: none;
     z-index: 15;
+    transition:
+        left 0.45s ease,
+        top 0.45s ease,
+        width 0.45s ease,
+        height 0.45s ease;
+}
+
+.hud-income-label {
+    display: none;
 }
 
 .hud-score {
-    width: 100%;
-    max-width: 100%;
+    width: 95px;
+    height: 22px;
     overflow: hidden;
     white-space: nowrap;
     color: #0f0;
@@ -292,21 +300,66 @@ canvas {
     font-size: 22px;
     font-weight: bold;
     line-height: 22px;
-    text-align: center;
+    text-align: right;
+    padding: 0 6px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-sizing: border-box;
 }
 
 .hud-income.hud-income--end {
-    left: 486px;
-    top: 122px;
+    left: 440px;
+    top: 170px;
     width: 76px;
-    height: 22px;
 }
 
 .hud-income.hud-income--end .hud-score {
+    width: 76px;
+    height: 22px;
     font-size: 20px;
-    line-height: 22px;
+    line-height: 16px;
+    text-align: center;
+    padding: 0 4px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
 }
 
 .hud-timer {
-    display: none;
+    position: absolute;
+    left: 255px;
+    top: 40px;
+    width: 200px;
+    height: 11px;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.hud-timer-bar {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.hud-timer-fill {
+    width: 100%;
+    height: 100%;
+    background: #ff69b4;
+    border-radius: 2px;
+    transform-origin: left center;
+}
+
+.game-container.game-ended .cooking-pot,
+.game-container.game-ended .cooking-pot-clip,
+.game-container.game-ended .water-layer,
+.game-container.game-ended .cooking-pot-guard,
+.game-container.game-ended #pot,
+.game-container.game-ended #cursorImage,
+.game-container.game-ended .held-cooking-pot,
+.game-container.game-ended .pour-animation {
+    display: none !important;
 }

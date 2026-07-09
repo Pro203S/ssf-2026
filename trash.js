@@ -4,7 +4,9 @@ const gameContainer = document.querySelector(".game-container");
 const cursorImage = document.getElementById("cursorImage");
 const pot = document.getElementById("pot");
 const scoreDisplay = document.getElementById("scoreDisplay");
-const hudIncome = document.querySelector(".hud-income");
+const hudIncome = document.getElementById("hudIncome");
+const hudTimer = document.getElementById("hudTimer");
+const timerFill = document.getElementById("timerFill");
 const heldCookingPot = document.getElementById("heldCookingPot");
 
 // 현재 마우스로 들고 있는 재료/도구의 clickZones id.
@@ -12,7 +14,8 @@ const heldCookingPot = document.getElementById("heldCookingPot");
 let activeZoneId = null;
 let heldCookingPotIndex = null;
 let balance = 0;
-let timeLeft = 60;
+const TOTAL_TIME = 60;
+let timeLeft = TOTAL_TIME;
 let gameActive = true;
 
 const RAMEN_PRICE = 1000;
@@ -91,7 +94,7 @@ const INGREDIENT_ORDER = [1, 0, 3, 2];
 
 const INCOME_BOX = {
     game: { left: 483, top: 81, width: 95, height: 22, baseFont: 22 },
-    end: { left: 486, top: 122, width: 76, height: 22, baseFont: 20 },
+    end: { left: 440, top: 170, width: 76, height: 22, baseFont: 20 },
 };
 
 function applyIncomeBoxLayout(mode) {
@@ -102,6 +105,11 @@ function applyIncomeBoxLayout(mode) {
     hudIncome.style.height = `${box.height}px`;
     hudIncome.dataset.incomeMode = mode;
     hudIncome.dataset.baseFont = String(box.baseFont);
+}
+
+function updateTimerDisplay() {
+    const percent = Math.max(0, (timeLeft / TOTAL_TIME) * 100);
+    timerFill.style.width = `${percent}%`;
 }
 
 function updateScoreDisplay() {
@@ -202,12 +210,16 @@ function endGame() {
         heldCookingPotIndex = null;
     }
 
-    status = balance > WIN_THRESHOLD ? "success" : "failed";
-    updateBackground(status);
+    gameContainer.classList.add("game-ended");
+    hudTimer.style.display = "none";
     hudIncome.classList.add("hud-income--end");
     applyIncomeBoxLayout("end");
+
+    status = balance > WIN_THRESHOLD ? "success" : "failed";
+    updateBackground(status);
     updateScoreDisplay();
     cursorImage.style.display = "none";
+    pot.style.display = "none";
     activeZoneId = null;
     heldCookingPotIndex = null;
 }
@@ -227,6 +239,7 @@ function startGameTimers() {
         if (!gameActive) return;
 
         timeLeft--;
+        updateTimerDisplay();
 
         if (timeLeft <= 0) {
             endGame();
@@ -236,6 +249,7 @@ function startGameTimers() {
 
 applyIncomeBoxLayout("game");
 updateScoreDisplay();
+updateTimerDisplay();
 startGameTimers();
 
 function getTargetZone(mouseX, mouseY) {
@@ -346,6 +360,17 @@ contentElement.addEventListener("click", function (event) {
 
     const clickedZone = getTargetZone(mouseX, mouseY);
 
+    // 허공을 클릭하면 들고 있는 재료/주전자/냄비를 원래 자리로 되돌린다.
+    if (clickedZone === undefined) {
+        if (heldCookingPotIndex !== null) {
+            putDownCookingPot(heldCookingPotIndex);
+            heldCookingPotIndex = null;
+        } else if (activeZoneId !== null) {
+            resetCursor();
+        }
+        return;
+    }
+
     if (clickedZone !== undefined) {
         const cookingPotIndex = clickedZone.id - 5;
 
@@ -353,6 +378,12 @@ contentElement.addEventListener("click", function (event) {
             const servedPotIndex = heldCookingPotIndex;
             heldCookingPotIndex = null;
             serveCookingPot(servedPotIndex);
+            return;
+        }
+
+        // 주전자를 든 채로 주전자 자리를 다시 클릭하면 내려놓는다.
+        if (activeZoneId === 4 && clickedZone.id === 4) {
+            resetCursor();
             return;
         }
 
