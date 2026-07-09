@@ -1,6 +1,6 @@
 @font-face {
-    font-family: "Friendly";
-    src: url("assets/fonts/friendly.ttf") format("truetype");
+    font-family: "Dajeong";
+    src: url("assets/fonts/dajeong.ttf");
 }
 
 * {
@@ -82,7 +82,7 @@ body {
     bottom: 90px;
     transform: translateX(-50%);
     white-space: nowrap;
-    font-family: "Friendly", sans-serif;
+    font-family: "Dajeong", sans-serif;
     font-size: 18px;
     line-height: 1.3;
     color: #ff4da6;
