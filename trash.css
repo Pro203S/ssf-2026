@@ -1,228 +1,228 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  background-color: #fcf7d9;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcf7d9;
 }
 
 /* Canvas와 팝업 요소를 감싸는 컨테이너 */
 .game-container {
-  position: relative;
-  width: 592px;
-  height: 476px;
+    position: relative;
+    width: 592px;
+    height: 476px;
 }
 
 canvas {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
-  display: block;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    display: block;
 }
 
 /* 4개의 특정 요소 (기본값: 숨김) */
 .popup-element {
-  display: none;
-  position: absolute;
-  /* 아래 스타일은 예시입니다. 원하는 대로 디자인하세요 */
-  width: 200px;
-  padding: 15px;
-  background-color: rgba(255, 255, 255, 0.95);
-  border: 2px solid #333;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+    display: none;
+    position: absolute;
+    /* 아래 스타일은 예시입니다. 원하는 대로 디자인하세요 */
+    width: 200px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
 
-  /* 화면 중앙 정렬 예시 */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    /* 화면 중앙 정렬 예시 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* 활성화되었을 때 보여주는 클래스 */
 .popup-element.active {
-  display: block;
+    display: block;
 }
 
 #cursorImage {
-  position: absolute;
-  width: auto;
-  height: auto;
-  min-width: 30px;
-  min-height: 30px;
-  max-width: 130px;
-  max-height: none;
-  object-fit: contain;
+    position: absolute;
+    width: auto;
+    height: auto;
+    min-width: 30px;
+    min-height: 30px;
+    max-width: 130px;
+    max-height: none;
+    object-fit: contain;
 
-  pointer-events: none;
-  display: none;
-  transform: translate(-50%, -50%);
-  z-index: 20;
+    pointer-events: none;
+    display: none;
+    transform: translate(-50%, -50%);
+    z-index: 20;
 }
 
-.nambi {
-  position: absolute;
-  pointer-events: none;
+.cooking-pot {
+    position: absolute;
+    pointer-events: none;
 }
 
-.n1 {
-  bottom: 195px;
-  left: 30px;
+.pot1 {
+    bottom: 195px;
+    left: 30px;
 }
 
-.n2 {
-  bottom: 120px;
-  left: -7px;
+.pot2 {
+    bottom: 120px;
+    left: -7px;
 }
 
-.n3 {
-  bottom: 120px;
-  left: 132px;
+.pot3 {
+    bottom: 120px;
+    left: 132px;
 }
 
-.n4 {
-  bottom: 195px;
-  left: 167px;
+.pot4 {
+    bottom: 195px;
+    left: 167px;
 }
 
-#jujeonja {
-  position: absolute;
-  pointer-events: none;
-  bottom: 120px;
-  right: 197px;
+#pot {
+    position: absolute;
+    pointer-events: none;
+    bottom: 120px;
+    right: 197px;
 }
 
-.indi {
-  position: absolute;
-  pointer-events: none;
+.indicator {
+    position: absolute;
+    pointer-events: none;
 }
 
-.pot-clip {
-  position: absolute;
-  width: 116px;
-  height: 73px;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 5;
+.cooking-pot-clip {
+    position: absolute;
+    width: 116px;
+    height: 73px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
 }
 
-.n1-clip {
-  bottom: 195px;
-  left: 30px;
+.pot1-clip {
+    bottom: 195px;
+    left: 30px;
 }
 
-.n2-clip {
-  bottom: 120px;
-  left: -7px;
+.pot2-clip {
+    bottom: 120px;
+    left: -7px;
 }
 
-.n3-clip {
-  bottom: 120px;
-  left: 132px;
+.pot3-clip {
+    bottom: 120px;
+    left: 132px;
 }
 
-.n4-clip {
-  bottom: 195px;
-  left: 167px;
+.pot4-clip {
+    bottom: 195px;
+    left: 167px;
 }
 
-.n1-clip .indi,
-.n1-clip .soup-dots {
-  left: 15px;
-  bottom: 10px;
+.pot1-clip .indicator,
+.pot1-clip .soup-dots {
+    left: 15px;
+    bottom: 10px;
 }
 
-.n2-clip .indi,
-.n2-clip .soup-dots {
-  left: 14px;
-  bottom: 10px;
+.pot2-clip .indicator,
+.pot2-clip .soup-dots {
+    left: 14px;
+    bottom: 10px;
 }
 
-.n3-clip .indi,
-.n3-clip .soup-dots {
-  left: 18px;
-  bottom: 10px;
+.pot3-clip .indicator,
+.pot3-clip .soup-dots {
+    left: 18px;
+    bottom: 10px;
 }
 
-.n4-clip .indi,
-.n4-clip .soup-dots {
-  left: 16px;
-  bottom: 10px;
+.pot4-clip .indicator,
+.pot4-clip .soup-dots {
+    left: 16px;
+    bottom: 10px;
 }
 
-.nambi-guard {
-  position: absolute;
-  pointer-events: none;
-  z-index: 9;
-  width: 116px;
-  height: 73px;
+.cooking-pot-guard {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9;
+    width: 116px;
+    height: 73px;
 }
 
 .soup-dots {
-  position: absolute;
-  width: 85px;
-  height: 68px;
+    position: absolute;
+    width: 85px;
+    height: 68px;
 }
 
 .soup-dot {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #e85a20;
-  box-shadow: 0 0 0.5px #c04010;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #e85a20;
+    box-shadow: 0 0 0.5px #c04010;
+    transform: translate(-50%, -50%);
 }
 
-/* 냄비 안쪽 타원 — nambi_watered.png 픽셀 기준 (left+21 / bottom+30, 74x36) */
+/* 냄비 안쪽 타원 — cooking_pot_watered.png 픽셀 기준 (left+21 / bottom+30, 74x36) */
 .water-layer {
-  position: absolute;
-  pointer-events: none;
-  z-index: 8;
-  width: 74px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(90, 170, 240, 0.45);
-  display: none;
+    position: absolute;
+    pointer-events: none;
+    z-index: 8;
+    width: 74px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(90, 170, 240, 0.45);
+    display: none;
 }
 
 .water-layer.has-soup {
-  background: rgba(230, 130, 50, 0.5);
+    background: rgba(230, 130, 50, 0.5);
 }
 
-.n1-water {
-  bottom: calc(195px + 30px);
-  left: calc(30px + 21px);
+.pot1-water {
+    bottom: calc(195px + 30px);
+    left: calc(30px + 21px);
 }
 
-.n2-water {
-  bottom: calc(120px + 30px);
-  left: calc(-7px + 21px);
+.pot2-water {
+    bottom: calc(120px + 30px);
+    left: calc(-7px + 21px);
 }
 
-.n3-water {
-  bottom: calc(120px + 30px);
-  left: calc(132px + 21px);
+.pot3-water {
+    bottom: calc(120px + 30px);
+    left: calc(132px + 21px);
 }
 
-.n4-water {
-  bottom: calc(195px + 30px);
-  left: calc(167px + 21px);
+.pot4-water {
+    bottom: calc(195px + 30px);
+    left: calc(167px + 21px);
 }
 
 .pour-animation {
-  position: absolute;
-  pointer-events: none;
-  z-index: 100;
-  width: 120px;
-  height: auto;
+    position: absolute;
+    pointer-events: none;
+    z-index: 100;
+    width: 120px;
+    height: auto;
 }
