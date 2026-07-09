@@ -3,10 +3,21 @@ const gameContainer = document.querySelector(".game-container");
 
 const cursorImage = document.getElementById("cursorImage");
 const pot = document.getElementById("pot");
+const scoreDisplay = document.getElementById("scoreDisplay");
+const hudIncome = document.querySelector(".hud-income");
+const heldCookingPot = document.getElementById("heldCookingPot");
 
 // 현재 마우스로 들고 있는 재료/도구의 clickZones id.
 // null이면 아무것도 들고 있지 않은 상태다.
 let activeZoneId = null;
+let heldCookingPotIndex = null;
+let balance = 0;
+let timeLeft = 60;
+let gameActive = true;
+
+const RAMEN_PRICE = 1000;
+const WIN_THRESHOLD = 10000;
+const MIN_BOIL_TIME = 5;
 
 // 냄비별 조리 상태.
 // 바깥 배열: 냄비 4개, 안쪽 배열: [달걀, 면, 수프, 파, 물, 끓이는 시간]
@@ -65,6 +76,7 @@ const clickZones = [
     { id: 5, x: 40, y: 195, width: 90, height: 70 },    // 1번 냄비, 왼쪽 위
     { id: 7, x: 145, y: 270, width: 90, height: 70 },   // 3번 냄비, 오른쪽 아래
     { id: 6, x: 5, y: 270, width: 90, height: 70 },     // 2번 냄비, 왼쪽 아래
+    { id: 9, x: 470, y: 200, width: 100, height: 120 }, // 트레이
 ];
 
 const pourPositions = [
@@ -76,6 +88,155 @@ const pourPositions = [
 
 // 넣는 순서와 관계없이 면 -> 계란 -> 파 -> 스프 순으로 보여줌
 const INGREDIENT_ORDER = [1, 0, 3, 2];
+
+const INCOME_BOX = {
+    game: { left: 483, top: 81, width: 95, height: 22, baseFont: 22 },
+    end: { left: 486, top: 122, width: 76, height: 22, baseFont: 20 },
+};
+
+function applyIncomeBoxLayout(mode) {
+    const box = INCOME_BOX[mode];
+    hudIncome.style.left = `${box.left}px`;
+    hudIncome.style.top = `${box.top}px`;
+    hudIncome.style.width = `${box.width}px`;
+    hudIncome.style.height = `${box.height}px`;
+    hudIncome.dataset.incomeMode = mode;
+    hudIncome.dataset.baseFont = String(box.baseFont);
+}
+
+function updateScoreDisplay() {
+    const text = balance.toLocaleString();
+    scoreDisplay.textContent = text;
+
+    const mode = hudIncome.dataset.incomeMode || "game";
+    const box = INCOME_BOX[mode];
+    let size = box.baseFont;
+    const minSize = 11;
+    const maxWidth = hudIncome.clientWidth - 2;
+
+    scoreDisplay.style.lineHeight = `${box.height}px`;
+    scoreDisplay.style.fontSize = `${size}px`;
+
+    while (scoreDisplay.scrollWidth > maxWidth && size > minSize) {
+        size -= 1;
+        scoreDisplay.style.fontSize = `${size}px`;
+    }
+}
+
+function getCookingPotParts(cookingPotIndex) {
+    const cookingPotNumber = cookingPotIndex + 1;
+    return {
+        pot: document.querySelector(`.cooking-pot.pot${cookingPotNumber}`),
+        clip: document.querySelector(`.pot${cookingPotNumber}-clip`),
+        water: document.querySelector(`.pot${cookingPotNumber}-water`),
+        guard: document.querySelector(`.cooking-pot-guard.pot${cookingPotNumber}`),
+    };
+}
+
+function positionHeldCookingPot(mouseX, mouseY) {
+    heldCookingPot.style.left = `${mouseX}px`;
+    heldCookingPot.style.top = `${mouseY}px`;
+}
+
+function pickUpCookingPot(cookingPotIndex, mouseX, mouseY) {
+    heldCookingPotIndex = cookingPotIndex;
+    const parts = getCookingPotParts(cookingPotIndex);
+
+    heldCookingPot.append(parts.pot, parts.clip, parts.water, parts.guard);
+    heldCookingPot.style.display = "block";
+    positionHeldCookingPot(mouseX, mouseY);
+    updateWaterLayer(cookingPotIndex);
+    cursorImage.style.display = "none";
+}
+
+function putDownCookingPot(cookingPotIndex) {
+    const parts = getCookingPotParts(cookingPotIndex);
+    const insertBefore = heldCookingPot;
+
+    gameContainer.insertBefore(parts.pot, insertBefore);
+    gameContainer.insertBefore(parts.clip, insertBefore);
+    gameContainer.insertBefore(parts.water, insertBefore);
+    gameContainer.insertBefore(parts.guard, insertBefore);
+
+    parts.pot.style.cssText = "";
+    parts.clip.style.cssText = "";
+    parts.water.style.cssText = "";
+    parts.guard.style.cssText = "";
+
+    heldCookingPot.style.display = "none";
+    updateWaterLayer(cookingPotIndex);
+}
+
+function resetCookingPotSlot(cookingPotIndex) {
+    cookingPotStatus[cookingPotIndex] = [0, 0, 0, 0, 0, 0];
+    refreshCookingPot(cookingPotIndex);
+}
+
+function canServeRamen(cookingPotIndex) {
+    const potStatus = cookingPotStatus[cookingPotIndex];
+    return (
+        potStatus[0] &&
+        potStatus[1] &&
+        potStatus[2] &&
+        potStatus[3] &&
+        potStatus[4] &&
+        potStatus[5] >= MIN_BOIL_TIME
+    );
+}
+
+function serveCookingPot(cookingPotIndex) {
+    if (canServeRamen(cookingPotIndex)) {
+        balance += RAMEN_PRICE;
+        updateScoreDisplay();
+    }
+
+    putDownCookingPot(cookingPotIndex);
+    resetCookingPotSlot(cookingPotIndex);
+}
+
+function endGame() {
+    gameActive = false;
+
+    if (heldCookingPotIndex !== null) {
+        putDownCookingPot(heldCookingPotIndex);
+        heldCookingPotIndex = null;
+    }
+
+    status = balance > WIN_THRESHOLD ? "success" : "failed";
+    updateBackground(status);
+    hudIncome.classList.add("hud-income--end");
+    applyIncomeBoxLayout("end");
+    updateScoreDisplay();
+    cursorImage.style.display = "none";
+    activeZoneId = null;
+    heldCookingPotIndex = null;
+}
+
+function startGameTimers() {
+    setInterval(() => {
+        if (!gameActive) return;
+
+        for (let i = 0; i < 4; i++) {
+            if (cookingPotStatus[i][4] && heldCookingPotIndex !== i) {
+                cookingPotStatus[i][5]++;
+            }
+        }
+    }, 1000);
+
+    setInterval(() => {
+        if (!gameActive) return;
+
+        timeLeft--;
+
+        if (timeLeft <= 0) {
+            endGame();
+        }
+    }, 1000);
+}
+
+applyIncomeBoxLayout("game");
+updateScoreDisplay();
+startGameTimers();
 
 function getTargetZone(mouseX, mouseY) {
     return clickZones.find(
@@ -177,6 +338,8 @@ function pourWater(cookingPotIndex) {
 }
 
 contentElement.addEventListener("click", function (event) {
+    if (!gameActive) return;
+
     const rect = contentElement.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
@@ -185,6 +348,13 @@ contentElement.addEventListener("click", function (event) {
 
     if (clickedZone !== undefined) {
         const cookingPotIndex = clickedZone.id - 5;
+
+        if (clickedZone.id === 9 && heldCookingPotIndex !== null) {
+            const servedPotIndex = heldCookingPotIndex;
+            heldCookingPotIndex = null;
+            serveCookingPot(servedPotIndex);
+            return;
+        }
 
         // 재료(id 0~3)를 들고 냄비(id 5~8)를 클릭한 경우.
         if (
@@ -211,7 +381,12 @@ contentElement.addEventListener("click", function (event) {
                 resetCursor();
             }
         } else if (5 <= clickedZone.id && 8 >= clickedZone.id) {
-            // 냄비만 클릭한 경우. 추후 조리 상태 확인/완성 처리 등을 넣을 자리.
+            if (heldCookingPotIndex === cookingPotIndex) {
+                heldCookingPotIndex = null;
+                putDownCookingPot(cookingPotIndex);
+            } else if (activeZoneId === null && heldCookingPotIndex === null) {
+                pickUpCookingPot(cookingPotIndex, mouseX, mouseY);
+            }
         } else {
             // 재료나 주전자를 클릭하면 해당 아이템을 커서에 붙인다.
             activeZoneId = clickedZone.id;
@@ -236,6 +411,8 @@ contentElement.addEventListener("click", function (event) {
 });
 
 contentElement.addEventListener("mousemove", function (event) {
+    if (!gameActive) return;
+
     const rect = contentElement.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
@@ -245,7 +422,9 @@ contentElement.addEventListener("mousemove", function (event) {
     contentElement.style.cursor =
         hoveredZone !== undefined ? "pointer" : "default";
 
-    if (activeZoneId !== null) {
+    if (heldCookingPotIndex !== null) {
+        positionHeldCookingPot(mouseX, mouseY);
+    } else if (activeZoneId !== null) {
         cursorImage.style.left = mouseX + "px";
         cursorImage.style.top = mouseY + "px";
     } else {
