@@ -93,3 +93,35 @@ canvas {
   bottom: 195px;
   left: 167px;
 }
+
+#jujeonja {
+  position: absolute;
+  pointer-events: none;
+  bottom: 120px;
+  right: 197px;
+}
+
+.indi {
+  position: absolute;
+  pointer-events: none;
+}
+
+.n1-indi {
+  bottom: 205px;
+  left: 45px;
+}
+
+.n2-indi {
+  bottom: 130px;
+  left: 7px;
+}
+
+.n3-indi {
+  bottom: 130px;
+  left: 150px;
+}
+
+.n4-indi {
+  bottom: 205px;
+  left: 183px;
+}
