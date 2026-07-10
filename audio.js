@@ -125,6 +125,13 @@ class AudioPlayer {
     }
 
     /**
+     * 오디오를 멈춥니다.
+     */
+    stop() {
+        this._audios.forEach(v => v.stop());
+    }
+
+    /**
      * 사용된 리소스를 모두 해제합니다.
      */
     async dispose() {
