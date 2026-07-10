@@ -126,7 +126,7 @@ const clickZones = [
     { id: ZONE_POT_1, x: 40, y: 195, width: 90, height: 70 },
     { id: ZONE_POT_3, x: 145, y: 270, width: 90, height: 70 },
     { id: ZONE_POT_2, x: 5, y: 270, width: 90, height: 70 },
-    { id: ZONE_TRAY, x: 470, y: 200, width: 100, height: 120 },
+    { id: ZONE_TRAY, x: 370, y: 200, width: 200, height: 120 },
 ];
 
 // 물 붓기 애니메이션 위치 (냄비 0~3)
