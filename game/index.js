@@ -18,7 +18,6 @@ const gameContainer = document.querySelector(".game-container");
 const cursorImage = document.getElementById("cursorImage");
 const kettle = document.getElementById("pot"); // 주전자 이미지
 const scoreDisplay = document.getElementById("scoreDisplay");
-const hudIncome = document.getElementById("hudIncome");
 const hudTimer = document.getElementById("hudTimer");
 const timerFill = document.getElementById("timerFill");
 const heldCookingPot = document.getElementById("heldCookingPot");
@@ -130,12 +129,6 @@ const pourPositions = [
     { bottom: "205px", left: "155px" },
 ];
 
-// 수입금 박스 위치
-const scoreBox = {
-    game: { left: 483, top: 81, width: 95, height: 22, fontSize: 22 },
-    end: { left: 440, top: 170, width: 76, height: 22, fontSize: 20 },
-};
-
 // #endregion
 
 // #region 화면 업데이트
@@ -144,20 +137,8 @@ function setBackground(name) {
     canvas.style.backgroundImage = backgrounds[name] || backgrounds.game;
 }
 
-function moveScoreBox(mode) {
-    const box = scoreBox[mode];
-    hudIncome.style.left = box.left + "px";
-    hudIncome.style.top = box.top + "px";
-    hudIncome.style.width = box.width + "px";
-    hudIncome.style.height = box.height + "px";
-    hudIncome.dataset.mode = mode;
-}
-
 function showScore() {
     scoreDisplay.textContent = money.toLocaleString();
-    const mode = hudIncome.dataset.mode || "game";
-    const box = scoreBox[mode];
-    fitScoreText(scoreDisplay, hudIncome, box.fontSize, box.height);
 }
 
 function showTimer() {
@@ -299,9 +280,6 @@ function endGame() {
 
     gameContainer.classList.add("game-ended");
     hudTimer.style.display = "none";
-    hudIncome.classList.add("hud-income--end");
-    moveScoreBox("end");
-
     if (money > WIN_SCORE) {
         setBackground("success");
     } else {
@@ -468,7 +446,6 @@ function onGameMouseMove(event) {
 // #region 게임 시작
 
 setBackground("game");
-moveScoreBox("game");
 showScore();
 showTimer();
 startTimers();

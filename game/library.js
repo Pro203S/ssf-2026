@@ -64,27 +64,6 @@ function getPotElements(potNumber) {
 }
 
 /**
- * 점수 글자가 박스보다 길면 글자 크기를 줄입니다.
- * @param {HTMLElement} scoreEl
- * @param {HTMLElement} boxEl
- * @param {number} startSize
- * @param {number} boxHeight
- */
-function fitScoreText(scoreEl, boxEl, startSize, boxHeight) {
-    let size = startSize;
-    const minSize = 11;
-    const maxWidth = boxEl.clientWidth - 2;
-
-    scoreEl.style.lineHeight = boxHeight + "px";
-    scoreEl.style.fontSize = size + "px";
-
-    while (scoreEl.scrollWidth > maxWidth && size > minSize) {
-        size = size - 1;
-        scoreEl.style.fontSize = size + "px";
-    }
-}
-
-/**
  * 스프를 넣었을 때 보이는 작은 점들을 만듭니다.
  * @param {number} potIndex 0~3
  * @returns {HTMLElement}
