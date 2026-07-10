@@ -1,5 +1,5 @@
 // ============================================================
-// trash.js — 슈의 라면가게 게임 로직
+// index.js — 슈의 라면가게 게임 로직
 //
 // 읽는 순서 추천:
 // 1) 상수 / 상태 변수
@@ -81,7 +81,6 @@ const SFX_SOUP = new AudioPlayer("/assets/sounds/sfx/soup.mp3");
 const SFX_STEAM = new AudioPlayer("/assets/sounds/sfx/steam.mp3");
 const SFX_NOODLES = new AudioPlayer("/assets/sounds/sfx/noodles.mp3");
 
-
 // ---------- 이미지 / 위치 데이터 ----------
 const backgrounds = {
     game: 'url("/assets/images/backgrounds/game.png")',
@@ -106,8 +105,8 @@ const potIngredientImages = [
     "green_onion_in_cooking_pot.png",
 ];
 
-// 그리는 순서: 면 → 계란 → 파 → 스프
-const DRAW_ORDER = [NOODLES, EGG, GREEN_ONION, SOUP];
+// 그리는 순서: 면 -> 파 -> 계란 -> 스프
+const DRAW_ORDER = [NOODLES, GREEN_ONION, EGG, SOUP];
 
 // 클릭할 수 있는 영역 (캔버스 왼쪽 위가 0,0)
 const clickZones = [
