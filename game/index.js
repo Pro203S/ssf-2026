@@ -79,6 +79,10 @@ const SFX_POUR_WATER = new AudioPlayer("/assets/sounds/sfx/pour_water.mp3");
 const SFX_SOUP = new AudioPlayer("/assets/sounds/sfx/soup.mp3");
 const SFX_STEAM = new AudioPlayer("/assets/sounds/sfx/steam.mp3");
 const SFX_NOODLES = new AudioPlayer("/assets/sounds/sfx/noodles.mp3");
+const BGM = new AudioPlayer("/assets/sounds/bgm/game.mp3", true, 10.65);
+const BGM_SUCCESS = new AudioPlayer("/assets/sounds/bgm/good_end.mp3");
+const BGM_FAIL = new AudioPlayer("/assets/sounds/bgm/bad_end.mp3");
+const BGM_FAIL_BUBBLES = new AudioPlayer("/assets/sounds/sfx/bad_end_bubbles.mp3");
 
 // ---------- 이미지 / 위치 데이터 ----------
 const backgrounds = {
@@ -123,10 +127,10 @@ const clickZones = [
 
 // 물 붓기 애니메이션 위치 (냄비 0~3)
 const pourPositions = [
-    { bottom: "205px", left: "20px" },
-    { bottom: "130px", left: "-20px" },
-    { bottom: "130px", left: "120px" },
-    { bottom: "205px", left: "155px" },
+    { bottom: "235px", left: "80px" },
+    { bottom: "160px", left: "30px" },
+    { bottom: "160px", left: "170px" },
+    { bottom: "215px", left: "225px" },
 ];
 
 // #endregion
@@ -280,12 +284,21 @@ function endGame() {
 
     gameContainer.classList.add("game-ended");
     hudTimer.style.display = "none";
+
+    BGM.stop();
+
     if (money > WIN_SCORE) {
         gameContainer.classList.add("game-success");
         setBackground("success");
+        BGM_SUCCESS.play();
     } else {
         gameContainer.classList.add("game-failed");
         setBackground("failed");
+        BGM_FAIL.play();
+        // 거품 소리는 1.93초 뒤에 재생
+        setTimeout(() => {
+            BGM_FAIL_BUBBLES.play();
+        }, 1930);
     }
 
     showScore();
@@ -456,7 +469,7 @@ canvas.addEventListener("click", onGameClick);
 canvas.addEventListener("mousemove", onGameMouseMove);
 
 document.addEventListener("DOMContentLoaded", async () => {
-    // 효과음 로딩
+    // 효과음 / 배경음 로딩
     await SFX_DISH_WASH.load();
     await SFX_BOILING.load();
     await SFX_CUSTOMER_TAKE.load();
@@ -467,11 +480,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     await SFX_SOUP.load();
     await SFX_STEAM.load();
     await SFX_NOODLES.load();
+    await BGM.load();
+    await BGM_SUCCESS.load();
+    await BGM_FAIL.load();
+    await BGM_FAIL_BUBBLES.load();
 
     // BGM 재생
-    const bgm = new AudioPlayer("/assets/sounds/bgm/game.mp3", true, 10.65);
-    await bgm.load();
-    await bgm.play();
+    await BGM.play();
 });
 
 // #endregion
