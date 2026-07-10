@@ -84,7 +84,7 @@ const SFX_SOUP = new AudioPlayer("/assets/sounds/sfx/soup.mp3");
 const SFX_STEAM = new AudioPlayer("/assets/sounds/sfx/steam.mp3");
 const SFX_NOODLES = new AudioPlayer("/assets/sounds/sfx/noodles.mp3");
 const BGM = new AudioPlayer("/assets/sounds/bgm/game.mp3", true, 10.65);
-const BGM_SUCCESS = new AudioPlayer("/assets/sounds/bgm/good_end.mp3");
+const BGM_SUCCESS = new AudioPlayer("/assets/sounds/bgm/good_end.mp3", true, 10.9);
 const BGM_FAIL = new AudioPlayer("/assets/sounds/bgm/bad_end.mp3");
 const BGM_FAIL_BUBBLES = new AudioPlayer("/assets/sounds/sfx/bad_end_bubbles.mp3");
 
@@ -311,7 +311,7 @@ function endGame() {
 
     BGM.stop();
 
-    if (money > WIN_SCORE) {
+    if (money >= WIN_SCORE) {
         gameContainer.classList.add("game-success");
         setBackground("success");
         BGM_SUCCESS.play();
@@ -511,6 +511,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // BGM 재생
     await BGM.play();
+
+    money = 10000;
+    endGame();
 });
 
 // #endregion
