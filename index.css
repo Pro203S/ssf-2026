@@ -97,17 +97,17 @@ body {
 .main-pot-label {
     position: absolute;
     left: 100px;
-    top: 0;
+    top: 18px;
     display: flex;
-    width: 129px;
-    height: 109px;
-    padding-left: 18px;
+    width: 100px;
+    height: 52px;
+    padding-left: 12px;
     justify-content: center;
     align-items: center;
-    background: url("assets/images/main_talk_bubble.png") center / contain no-repeat;
+    background: url("assets/images/pot_talk_bubble.png") center / contain no-repeat;
     color: #b57102;
     font-family: "Dajeong", sans-serif;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: -5%;
     white-space: nowrap;

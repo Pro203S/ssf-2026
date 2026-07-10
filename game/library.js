@@ -164,21 +164,25 @@ function redrawPotIngredients(potIndex, potStatus, drawOrder, ingredientImages) 
  * 물/스프 물 레이어를 켜거나 끕니다.
  * @param {number} potIndex 0~3
  * @param {number[]} potStatus
+ * @param {number} minBoilTime 거품이 생기기 시작하는 시간
  */
-function updateWaterLayer(potIndex, potStatus) {
+function updateWaterLayer(potIndex, potStatus, minBoilTime) {
     const potNumber = potIndex + 1;
     const water = document.querySelector(".pot" + potNumber + "-water");
     if (!water) return;
 
     const hasWater = potStatus[4] === 1;
     const hasSoup = potStatus[2] === 1;
+    const isBoiling = potStatus[5] >= minBoilTime;
 
     if (!hasWater) {
         water.style.display = "none";
+        water.classList.remove("is-boiling");
         return;
     }
 
     water.style.display = "block";
+    water.classList.toggle("is-boiling", isBoiling);
     if (hasSoup) {
         water.classList.add("has-soup");
     } else {

@@ -167,7 +167,7 @@ function showTimer() {
 
 function refreshPot(potIndex) {
     redrawPotIngredients(potIndex, pots[potIndex], DRAW_ORDER, potIngredientImages);
-    updateWaterLayer(potIndex, pots[potIndex]);
+    updateWaterLayer(potIndex, pots[potIndex], MIN_BOIL_TIME);
 }
 
 function clearHand() {
@@ -192,7 +192,7 @@ function pickUpPot(potIndex, x, y) {
     heldCookingPot.append(parts.pot, parts.clip, parts.water, parts.guard);
     heldCookingPot.style.display = "block";
     moveHeldPot(x, y);
-    updateWaterLayer(potIndex, pots[potIndex]);
+    updateWaterLayer(potIndex, pots[potIndex], MIN_BOIL_TIME);
     cursorImage.style.display = "none";
 }
 
@@ -210,7 +210,7 @@ function putDownPot(potIndex) {
     parts.guard.style.cssText = "";
 
     heldCookingPot.style.display = "none";
-    updateWaterLayer(potIndex, pots[potIndex]);
+    updateWaterLayer(potIndex, pots[potIndex], MIN_BOIL_TIME);
 }
 
 function resetPot(potIndex) {
@@ -325,6 +325,11 @@ function startTimers() {
             const isHeld = holdingPotIndex === i;
             if (hasWater && !isHeld) {
                 pots[i][BOIL_TIME] = pots[i][BOIL_TIME] + 1;
+
+                if (pots[i][BOIL_TIME] === MIN_BOIL_TIME) {
+                    refreshPot(i);
+                    SFX_BOILING.play();
+                }
             }
         }
     }, 1000);
@@ -390,6 +395,9 @@ function onGameClick(event) {
 
     // 4) 재료를 들고 냄비 클릭 → 재료 넣기
     if (isIngredient(holdingItemId) && isPotZone(zone.id)) {
+        // 같은 재료는 냄비마다 한 번만 넣을 수 있습니다.
+        if (pots[potIndex][holdingItemId] === 1) return;
+
         switch (holdingItemId) {
             case 0: // 계란
                 SFX_EGG.play();
@@ -404,11 +412,9 @@ function onGameClick(event) {
                 SFX_GREEN_ONION.play();
                 break;
         }
-        if (pots[potIndex][holdingItemId] === 0) {
-            pots[potIndex][holdingItemId] = 1;
-            refreshPot(potIndex);
-            holdingItemId = null;
-        }
+        pots[potIndex][holdingItemId] = 1;
+        refreshPot(potIndex);
+        holdingItemId = null;
         return;
     }
 
