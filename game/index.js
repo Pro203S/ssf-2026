@@ -511,9 +511,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // BGM 재생
     await BGM.play();
-
-    money = 10000;
-    endGame();
 });
 
 // #endregion
