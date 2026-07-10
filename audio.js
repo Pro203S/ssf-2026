@@ -6,7 +6,8 @@
 //
 // ==================
 
-const DEFAULT_VOLUME = 0.5;
+const DEFAULT_VOLUME = 0.75;
+const AUDIO_ELEMENT_COUNT = 10;
 const USER_GESTURE_EVENTS = ["pointerdown", "mousedown", "click", "keydown", "touchstart"];
 
 function playWithUserGesture(audio) {
@@ -35,14 +36,16 @@ class AudioPlayer {
     _src = "";
     _loop = false;
     _duration = 0;
+    _playbackRate = 1;
 
-    /** @type {HTMLAudioElement} */
-    _audio1 = null;
-    /** @type {HTMLAudioElement} */
-    _audio2 = null;
+    /** @type {HTMLAudioElement[]} */
+    _audios = [];
 
     /** @type {number} */
     _interval = -1;
+
+    /** @type {number} */
+    _audioIndex = 0;
 
     /**
      * AudioPlayer의 새 인스턴스를 생성합니다.
@@ -50,50 +53,43 @@ class AudioPlayer {
      * @param {string} src 오디오 소스
      * @param {boolean} [loop = false] 반복 여부
      * @param {number} [duration = 0] 반복 길이
+     * @param {number} [playbackRate = 1] 재생 속도
      */
     constructor(
         src,
         loop = false,
-        duration = 0
+        duration = 0,
+        playbackRate = 1
     ) {
         this._src = src;
         this._loop = loop;
         this._duration = duration;
+        this._playbackRate = playbackRate;
     }
 
     /**
      * 오디오 파일을 로드합니다.
      */
     load() {
-        if (this._loop) return new Promise(resolve => {
-            const audio1 = document.createElement("audio");
-            const audio2 = document.createElement("audio");
-
-            audio1.addEventListener("canplay", () => {
-                audio2.addEventListener("canplay", () => {
-                    this._audio1 = audio1;
-                    this._audio2 = audio2;
-
-                    resolve();
-                });
-
-                audio2.src = this._src;
-            });
-
-            audio1.src = this._src;
-        });
-
         return new Promise(resolve => {
-            const audio = document.createElement("audio");
+            const audios = Array.from({ length: AUDIO_ELEMENT_COUNT }, () => document.createElement("audio"));
+            let loadedCount = 0;
 
-            audio.addEventListener("ended", () => audio.currentTime = 0);
+            audios.forEach(audio => {
+                audio.volume = DEFAULT_VOLUME;
+                audio.playbackRate = this._playbackRate;
 
-            audio.addEventListener("canplay", () => {
-                this._audio1 = audio;
-                resolve();
+                audio.addEventListener("canplay", () => {
+                    loadedCount++;
+
+                    if (loadedCount === audios.length) {
+                        this._audios = audios;
+                        resolve();
+                    }
+                }, { once: true });
+
+                audio.src = this._src;
             });
-
-            audio.src = this._src;
         });
     }
 
@@ -101,25 +97,30 @@ class AudioPlayer {
      * 오디오를 재생합니다.
      */
     async play() {
-        if (!this._loop) return await playWithUserGesture(this._audio1);
+        if (!this._loop) {
+            const audio = this._audios[this._audioIndex];
+            this._audioIndex = (this._audioIndex + 1) % this._audios.length;
+            audio.currentTime = 0;
+            return await playWithUserGesture(audio);
+        };
 
         if (!this._duration || this._duration <= 0) throw new Error("duration이 없거나 0보다 작습니다.");
 
         const switchTime = Math.max(0, (this._duration - 0.06) * 1000);
-        let currentAudio = this._audio1;
-        let nextAudio = this._audio2;
+        let currentIndex = 0;
+        let nextIndex = 1;
 
         const playNext = async () => {
-            const audio = nextAudio;
-            nextAudio = currentAudio;
-            currentAudio = audio;
+            const audio = this._audios[nextIndex];
+            currentIndex = nextIndex;
+            nextIndex = (nextIndex + 1) % this._audios.length;
 
             audio.currentTime = 0;
             await playWithUserGesture(audio);
             this._interval = setTimeout(playNext, switchTime);
         };
 
-        await playWithUserGesture(currentAudio);
+        await playWithUserGesture(this._audios[currentIndex]);
         this._interval = setTimeout(playNext, switchTime);
     }
 
@@ -127,7 +128,6 @@ class AudioPlayer {
      * 사용된 리소스를 모두 해제합니다.
      */
     async dispose() {
-        this._audio1 = null;
-        this._audio2 = null;
+        this._audios = [];
     }
 }
