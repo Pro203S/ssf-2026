@@ -101,7 +101,7 @@ class AudioPlayer {
             const audio = this._audios[this._audioIndex];
             this._audioIndex = (this._audioIndex + 1) % this._audios.length;
             audio.currentTime = 0;
-            return await playWithUserGesture(audio);
+            return await audio.play();
         };
 
         if (!this._duration || this._duration <= 0) throw new Error("duration이 없거나 0보다 작습니다.");
