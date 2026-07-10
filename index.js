@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     /** @type {HTMLLinkElement} */
     const gameBtn = document.querySelector("#gameBtn");
 
-    const steam = new AudioPlayer("/assets/sounds/sfx/steam.mp3");
+    const steam = new AudioPlayer("/assets/sounds/sfx/steam_short.mp3");
     await steam.load();
 
     howToBtn.addEventListener("mouseenter", () => {
