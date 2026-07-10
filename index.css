@@ -1,9 +1,4 @@
 @font-face {
-    font-family: "Dajeong";
-    src: url("assets/fonts/dajeong.ttf");
-}
-
-@font-face {
     font-family: "Sandol";
     src: url("assets/fonts/sandol.ttf");
 }
@@ -87,7 +82,7 @@ body {
     bottom: 90px;
     transform: translateX(-50%);
     white-space: nowrap;
-    font-family: "Sandol", sans-serif;
+    font-family: "Sandol";
     font-size: 18px;
     line-height: 1.3;
     color: #ff4da6;

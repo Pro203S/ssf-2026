@@ -1,29 +1,16 @@
-const MAIN_BG = "/assets/images/backgrounds/main.png";
-const TUTORIAL_BG = "/assets/images/backgrounds/tutorial.png";
+document.addEventListener("DOMContentLoaded", async () => {
+    const mainBg = document.querySelector("#mainBg");
+    /** @type {HTMLButtonElement} */
+    const howToBtn = document.querySelector("#howToBtn");
+    /** @type {HTMLLinkElement} */
+    const gameBtn = document.querySelector("#gameBtn");
 
-const game = document.getElementById("game");
-const mainBg = document.getElementById("mainBg");
-const howtoBtn = document.getElementById("howtoBtn");
+    const steam = new AudioPlayer("/assets/sounds/sfx/steam.mp3");
+    await steam.load();
 
-function showTutorial() {
-    game.classList.add("is-tutorial");
-    mainBg.src = TUTORIAL_BG;
-    mainBg.alt = "게임 설명";
-}
+    howToBtn.addEventListener("mouseenter", () => steam.play());
 
-function showMain() {
-    game.classList.remove("is-tutorial");
-    mainBg.src = MAIN_BG;
-    mainBg.alt = "슈의 라면집";
-}
-
-howtoBtn.addEventListener("click", function (event) {
-    event.preventDefault();
-    showTutorial();
-});
-
-mainBg.addEventListener("click", function () {
-    if (game.classList.contains("is-tutorial")) {
-        showMain();
-    }
+    const player = new AudioPlayer("/assets/sounds/bgm/main.mp3", true, 4.324);
+    await player.load();
+    player.play();
 });
