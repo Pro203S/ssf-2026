@@ -7,6 +7,29 @@
 // ==================
 
 const DEFAULT_VOLUME = 0.5;
+const USER_GESTURE_EVENTS = ["pointerdown", "mousedown", "click", "keydown", "touchstart"];
+
+function playWithUserGesture(audio) {
+    return audio.play().catch(error => {
+        if (error.name !== "NotAllowedError") {
+            throw error;
+        }
+
+        return new Promise((resolve, reject) => {
+            const retry = () => {
+                USER_GESTURE_EVENTS.forEach(eventName => {
+                    document.removeEventListener(eventName, retry);
+                });
+
+                playWithUserGesture(audio).then(resolve).catch(reject);
+            };
+
+            USER_GESTURE_EVENTS.forEach(eventName => {
+                document.addEventListener(eventName, retry);
+            });
+        });
+    });
+}
 
 class AudioPlayer {
     _src = "";
@@ -78,7 +101,7 @@ class AudioPlayer {
      * 오디오를 재생합니다.
      */
     async play() {
-        if (!this._loop) return await this._audio1.play();
+        if (!this._loop) return await playWithUserGesture(this._audio1);
 
         if (!this._duration || this._duration <= 0) throw new Error("duration이 없거나 0보다 작습니다.");
 
@@ -92,11 +115,11 @@ class AudioPlayer {
             currentAudio = audio;
 
             audio.currentTime = 0;
-            await audio.play();
+            await playWithUserGesture(audio);
             this._interval = setTimeout(playNext, switchTime);
         };
 
-        await currentAudio.play();
+        await playWithUserGesture(currentAudio);
         this._interval = setTimeout(playNext, switchTime);
     }
 
