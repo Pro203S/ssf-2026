@@ -24,7 +24,7 @@ const heldCookingPot = document.getElementById("heldCookingPot");
 const hudCustomer = document.getElementById("hudCustomer");
 
 // ---------- 게임 설정 ----------
-const TOTAL_TIME = 6000; // 제한 시간(초)
+const TOTAL_TIME = 60; // 제한 시간(초)
 const RAMEN_PRICE = 1000; // 라면 한 그릇 가격
 const WIN_SCORE = 10000; // 이 점수보다 크면 성공
 const MIN_BOIL_TIME = 5; // 최소 끓이는 시간(초)
