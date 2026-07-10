@@ -21,9 +21,10 @@ const scoreDisplay = document.getElementById("scoreDisplay");
 const hudTimer = document.getElementById("hudTimer");
 const timerFill = document.getElementById("timerFill");
 const heldCookingPot = document.getElementById("heldCookingPot");
+const hudCustomer = document.getElementById("hudCustomer");
 
 // ---------- 게임 설정 ----------
-const TOTAL_TIME = 60; // 제한 시간(초)
+const TOTAL_TIME = 6000; // 제한 시간(초)
 const RAMEN_PRICE = 1000; // 라면 한 그릇 가격
 const WIN_SCORE = 10000; // 이 점수보다 크면 성공
 const MIN_BOIL_TIME = 5; // 최소 끓이는 시간(초)
@@ -67,6 +68,9 @@ let pots = [
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
 ];
+
+// 손님 말풍선 timeout
+let customerBallonTimeout = -1;
 
 // ---------- 효과음 ----------
 const SFX_DISH_WASH = new AudioPlayer("/assets/sounds/sfx/dish_wash.mp3");
@@ -161,6 +165,23 @@ function clearHand() {
     cursorImage.style.display = "none";
 }
 
+function showCustomerBallon(text) {
+    // 이미 풍선이 있다면 없애기
+    if (customerBallonTimeout >= 0) {
+        clearTimeout(customerBallonTimeout);
+    }
+
+    hudCustomer.innerText = text;
+    hudCustomer.removeAttribute("style");
+
+    // 1초 뒤 되돌리기
+    customerBallonTimeout = setTimeout(() => {
+        hudCustomer.innerText = "";
+        hudCustomer.style.display = "none";
+        customerBallonTimeout = -1;
+    }, 1000);
+}
+
 // #endregion
 
 // #region 냄비 들기 / 놓기 / 서빙
@@ -219,6 +240,7 @@ function servePot(potIndex) {
     SFX_DISH_WASH.play();
 
     if (isRamenReady(potIndex)) {
+        showCustomerBallon("아이맛잇어");
         SFX_CUSTOMER_TAKE.play();
         money = money + RAMEN_PRICE;
         showScore();
@@ -226,6 +248,8 @@ function servePot(potIndex) {
         resetPot(potIndex);
         return;
     }
+
+    showCustomerBallon("지금 장난해?");
 
     SFX_CUSTOMER_WTF.play();
     putDownPot(potIndex);

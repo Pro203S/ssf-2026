@@ -3,6 +3,11 @@
     src: url("/assets/fonts/lcd.ttf") format("truetype")
 }
 
+@font-face {
+    font-family: 'Dajeong';
+    src: url("/assets/fonts/dajeong.woff");
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -218,11 +223,14 @@ canvas {
 }
 
 @keyframes boiling-bubbles {
-    0%, 49.999% {
+
+    0%,
+    49.999% {
         transform: translate(-50%, calc(-50% + 1px));
     }
 
-    50%, 100% {
+    50%,
+    100% {
         transform: translate(-50%, calc(-50% - 1px));
     }
 }
@@ -375,6 +383,37 @@ canvas {
     background: #ff69b4;
     border-radius: 2px;
     transform-origin: left center;
+}
+
+.hud-customer {
+    position: absolute;
+    left: 420px;
+    top: 95px;
+    display: flex;
+    width: 141.9px;
+    height: 119.9px;
+    justify-content: center;
+    align-items: center;
+    color: #b57102;
+    font-family: "Dajeong", sans-serif;
+    font-size: 20px;
+    padding-right: 15px;
+    font-weight: 600;
+    letter-spacing: -5%;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 5;
+    isolation: isolate;
+}
+
+.hud-customer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("/assets/images/main_talk_bubble.png") center / 100% 100% no-repeat;
+    transform: scaleX(-1);
+    z-index: -1;
 }
 
 .game-container.game-ended .cooking-pot,
