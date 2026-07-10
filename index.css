@@ -1,6 +1,6 @@
 @font-face {
-    font-family: "Sandol";
-    src: url("assets/fonts/sandol.ttf");
+    font-family: "Dajeong";
+    src: url("assets/fonts/dajeong.woff");
 }
 
 * {
@@ -74,6 +74,52 @@ body {
     display: block;
     pointer-events: none;
     user-select: none;
+}
+
+.main-pot-lid {
+    position: absolute;
+    left: 26px;
+    top: 64px;
+    width: 89px;
+    height: 53px;
+    display: block;
+    transform-origin: left 75%;
+    pointer-events: none;
+    user-select: none;
+    z-index: 2;
+}
+
+.main-pot:hover .main-pot-lid,
+.main-pot:focus-visible .main-pot-lid {
+    transform: rotate(-20deg);
+}
+
+.main-pot-label {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    display: flex;
+    width: 129px;
+    height: 109px;
+    padding-left: 18px;
+    justify-content: center;
+    align-items: center;
+    background: url("assets/images/main_talk_bubble.png") center / contain no-repeat;
+    color: #b57102;
+    font-family: "Dajeong", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -5%;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    z-index: 3;
+}
+
+.main-pot:hover,
+.main-pot:focus-visible {
+    z-index: 3;
 }
 
 .main-pot-steam {

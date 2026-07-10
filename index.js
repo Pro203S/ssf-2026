@@ -8,8 +8,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const steam = new AudioPlayer("/assets/sounds/sfx/steam.mp3");
     await steam.load();
 
-    howToBtn.addEventListener("mouseenter", () => steam.play());
-    gameBtn.addEventListener("mouseenter", () => steam.play());
+    howToBtn.addEventListener("mouseenter", () => {
+        steam.play();
+    });
+    gameBtn.addEventListener("mouseenter", () => {
+        steam.play();
+    });
 
     const player = new AudioPlayer("/assets/sounds/bgm/main.mp3", true, 4.324);
     await player.load();
