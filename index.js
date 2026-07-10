@@ -1,5 +1,5 @@
-const MAIN_BG = "assets/images/backgrounds/main.png";
-const TUTORIAL_BG = "assets/images/backgrounds/tutorial.png";
+const MAIN_BG = "/assets/images/backgrounds/main.png";
+const TUTORIAL_BG = "/assets/images/backgrounds/tutorial.png";
 
 const game = document.getElementById("game");
 const mainBg = document.getElementById("mainBg");
