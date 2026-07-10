@@ -321,7 +321,7 @@ canvas {
     white-space: nowrap;
     color: #0f0;
     font-family: 'LCD';
-    font-size: 33px;
+    font-size: 27px;
     font-weight: bold;
     line-height: 33px;
     text-align: right;
@@ -330,6 +330,24 @@ canvas {
     border: none;
     border-radius: 0;
     box-sizing: border-box;
+}
+
+.game-container.game-success .hud-income {
+    left: 428px;
+    top: 197px;
+    width: 97px;
+}
+
+.game-container.game-failed .hud-income {
+    left: 404px;
+    top: 166px;
+    width: 98px;
+}
+
+.game-container.game-ended .hud-score {
+    width: 100%;
+    text-align: center;
+    padding: 0;
 }
 
 .hud-timer {

@@ -281,8 +281,10 @@ function endGame() {
     gameContainer.classList.add("game-ended");
     hudTimer.style.display = "none";
     if (money > WIN_SCORE) {
+        gameContainer.classList.add("game-success");
         setBackground("success");
     } else {
+        gameContainer.classList.add("game-failed");
         setBackground("failed");
     }
 
