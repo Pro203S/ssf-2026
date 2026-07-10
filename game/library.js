@@ -155,7 +155,7 @@ function redrawPotIngredients(potIndex, potStatus, drawOrder, ingredientImages) 
         const img = document.createElement("img");
         img.className = "indicator cooking-pot-item";
         img.dataset.cookingPot = String(potIndex);
-        img.src = "assets/images/game_assets/" + ingredientImages[ingredientId];
+        img.src = "/assets/images/game_assets/" + ingredientImages[ingredientId];
         clip.appendChild(img);
     }
 }

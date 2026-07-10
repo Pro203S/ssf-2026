@@ -10,6 +10,8 @@
 // 어려운 DOM 처리는 library.js 에 있습니다.
 // ============================================================
 
+// #region 변수 선언
+
 // ---------- HTML 요소 ----------
 const canvas = document.querySelector("canvas");
 const gameContainer = document.querySelector(".game-container");
@@ -67,6 +69,19 @@ let pots = [
     [0, 0, 0, 0, 0, 0],
 ];
 
+// ---------- 효과음 ----------
+const SFX_DISH_WASH = new AudioPlayer("/assets/sounds/sfx/dish_wash.mp3");
+const SFX_BOILING = new AudioPlayer("/assets/sounds/sfx/boiling.mp3");
+const SFX_CUSTOMER_TAKE = new AudioPlayer("/assets/sounds/sfx/customer_take.mp3");
+const SFX_CUSTOMER_WTF = new AudioPlayer("/assets/sounds/sfx/customer_wtf.mp3");
+const SFX_EGG = new AudioPlayer("/assets/sounds/sfx/egg.mp3");
+const SFX_GREEN_ONION = new AudioPlayer("/assets/sounds/sfx/green_onion.mp3");
+const SFX_POUR_WATER = new AudioPlayer("/assets/sounds/sfx/pour_water.mp3");
+const SFX_SOUP = new AudioPlayer("/assets/sounds/sfx/soup.mp3");
+const SFX_STEAM = new AudioPlayer("/assets/sounds/sfx/steam.mp3");
+const SFX_NOODLES = new AudioPlayer("/assets/sounds/sfx/noodles.mp3");
+
+
 // ---------- 이미지 / 위치 데이터 ----------
 const backgrounds = {
     game: 'url("/assets/images/backgrounds/game.png")',
@@ -122,9 +137,9 @@ const scoreBox = {
     end: { left: 440, top: 170, width: 76, height: 22, fontSize: 20 },
 };
 
-// ============================================================
-// 화면 업데이트
-// ============================================================
+// #endregion
+
+// #region 화면 업데이트
 
 function setBackground(name) {
     canvas.style.backgroundImage = backgrounds[name] || backgrounds.game;
@@ -162,9 +177,9 @@ function clearHand() {
     cursorImage.style.display = "none";
 }
 
-// ============================================================
-// 냄비 들기 / 놓기 / 서빙
-// ============================================================
+// #endregion
+
+// #region 냄비 들기 / 놓기 / 서빙
 
 function moveHeldPot(x, y) {
     heldCookingPot.style.left = x + "px";
@@ -217,10 +232,18 @@ function isRamenReady(potIndex) {
 }
 
 function servePot(potIndex) {
+    SFX_DISH_WASH.play();
+
     if (isRamenReady(potIndex)) {
+        SFX_CUSTOMER_TAKE.play();
         money = money + RAMEN_PRICE;
         showScore();
+        putDownPot(potIndex);
+        resetPot(potIndex);
+        return;
     }
+
+    SFX_CUSTOMER_WTF.play();
     putDownPot(potIndex);
     resetPot(potIndex);
 }
@@ -232,6 +255,8 @@ function pourWater(potIndex) {
     pourImg.style.bottom = pourPositions[potIndex].bottom;
     pourImg.style.left = pourPositions[potIndex].left;
     gameContainer.appendChild(pourImg);
+
+    SFX_POUR_WATER.play();
 
     setTimeout(function () {
         pourImg.remove();
@@ -265,9 +290,9 @@ function returnHeldThings() {
     }
 }
 
-// ============================================================
-// 게임 시작 / 종료 / 타이머
-// ============================================================
+// #endregion
+
+// #region 게임 시작 / 종료 / 타이머
 
 function endGame() {
     gamePlaying = false;
@@ -318,9 +343,9 @@ function startTimers() {
     }, 1000);
 }
 
-// ============================================================
-// 클릭 처리 (게임의 핵심)
-// ============================================================
+// #endregion
+
+// #region 클릭 처리
 
 function isIngredient(id) {
     return id === ZONE_EGG || id === ZONE_NOODLES || id === ZONE_SOUP || id === ZONE_GREEN_ONION;
@@ -366,6 +391,20 @@ function onGameClick(event) {
 
     // 4) 재료를 들고 냄비 클릭 → 재료 넣기
     if (isIngredient(holdingItemId) && isPotZone(zone.id)) {
+        switch (holdingItemId) {
+            case 0: // 계란
+                SFX_EGG.play();
+                break;
+            case 1: // 면
+                SFX_NOODLES.play();
+                break;
+            case 2: // 스프
+                SFX_SOUP.play();
+                break;
+            case 3: // 파
+                SFX_GREEN_ONION.play();
+                break;
+        }
         if (pots[potIndex][holdingItemId] === 0) {
             pots[potIndex][holdingItemId] = 1;
             refreshPot(potIndex);
@@ -419,9 +458,9 @@ function onGameMouseMove(event) {
     }
 }
 
-// ============================================================
-// 게임 시작
-// ============================================================
+// #endregion
+
+// #region 게임 시작
 
 setBackground("game");
 moveScoreBox("game");
@@ -431,3 +470,24 @@ startTimers();
 
 canvas.addEventListener("click", onGameClick);
 canvas.addEventListener("mousemove", onGameMouseMove);
+
+document.addEventListener("DOMContentLoaded", async () => {
+    // 효과음 로딩
+    await SFX_DISH_WASH.load();
+    await SFX_BOILING.load();
+    await SFX_CUSTOMER_TAKE.load();
+    await SFX_CUSTOMER_WTF.load();
+    await SFX_EGG.load();
+    await SFX_GREEN_ONION.load();
+    await SFX_POUR_WATER.load();
+    await SFX_SOUP.load();
+    await SFX_STEAM.load();
+    await SFX_NOODLES.load();
+
+    // BGM 재생
+    const bgm = new AudioPlayer("/assets/sounds/bgm/game.mp3", true, 10.65);
+    await bgm.load();
+    await bgm.play();
+});
+
+// #endregion
