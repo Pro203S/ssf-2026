@@ -47,6 +47,9 @@ class AudioPlayer {
     /** @type {number} */
     _audioIndex = 0;
 
+    /** @type {boolean} */
+    _playing = false;
+
     /**
      * AudioPlayer의 새 인스턴스를 생성합니다.
      * 
@@ -71,25 +74,23 @@ class AudioPlayer {
      * 오디오 파일을 로드합니다.
      */
     load() {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             const audios = Array.from({ length: AUDIO_ELEMENT_COUNT }, () => document.createElement("audio"));
-            let loadedCount = 0;
 
             audios.forEach(audio => {
                 audio.volume = DEFAULT_VOLUME;
                 audio.playbackRate = this._playbackRate;
-
-                audio.addEventListener("canplay", () => {
-                    loadedCount++;
-
-                    if (loadedCount === audios.length) {
-                        this._audios = audios;
-                        resolve();
-                    }
-                }, { once: true });
-
                 audio.src = this._src;
             });
+
+            const first = audios[0];
+            first.addEventListener("canplay", () => {
+                this._audios = audios;
+                resolve();
+            }, { once: true });
+            first.addEventListener("error", () => {
+                reject(new Error(`오디오를 불러올 수 없습니다: ${this._src}`));
+            }, { once: true });
         });
     }
 
@@ -104,7 +105,11 @@ class AudioPlayer {
             return await audio.play();
         };
 
+        if (this._playing) return;
+
         if (!this._duration || this._duration <= 0) throw new Error("duration이 없거나 0보다 작습니다.");
+
+        this._playing = true;
 
         const switchTime = Math.max(0, (this._duration - 0.06) * 1000);
         let currentIndex = 0;
@@ -128,6 +133,7 @@ class AudioPlayer {
      * 오디오를 멈춥니다.
      */
     stop() {
+        this._playing = false;
         this._audios.forEach(v => v.pause());
         clearTimeout(this._interval);
     }
