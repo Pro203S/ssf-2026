@@ -76,7 +76,7 @@ let customerBallonTimeout = -1;
 const SFX_DISH_WASH = new AudioPlayer("/assets/sounds/sfx/dish_wash.mp3");
 const SFX_BOILING = new AudioPlayer("/assets/sounds/sfx/boiling.mp3");
 const SFX_CUSTOMER_TAKE = new AudioPlayer("/assets/sounds/sfx/customer_take.mp3");
-const SFX_CUSTOMER_WTF = new AudioPlayer("/assets/sounds/sfx/customer_wtf.mp3");
+const SFX_CUSTOMER_REJECT = new AudioPlayer("/assets/sounds/sfx/customer_reject.mp3");
 const SFX_EGG = new AudioPlayer("/assets/sounds/sfx/egg.mp3");
 const SFX_GREEN_ONION = new AudioPlayer("/assets/sounds/sfx/green_onion.mp3");
 const SFX_POUR_WATER = new AudioPlayer("/assets/sounds/sfx/pour_water.mp3");
@@ -251,7 +251,7 @@ function servePot(potIndex) {
 
     showCustomerBallon("지금 장난해?");
 
-    SFX_CUSTOMER_WTF.play();
+    SFX_CUSTOMER_REJECT.play();
     putDownPot(potIndex);
     resetPot(potIndex);
 }
@@ -497,7 +497,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await SFX_DISH_WASH.load();
     await SFX_BOILING.load();
     await SFX_CUSTOMER_TAKE.load();
-    await SFX_CUSTOMER_WTF.load();
+    await SFX_CUSTOMER_REJECT.load();
     await SFX_EGG.load();
     await SFX_GREEN_ONION.load();
     await SFX_POUR_WATER.load();
