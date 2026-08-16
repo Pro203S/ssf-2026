@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const howToBtn = document.querySelector("#howToBtn");
     const gameBtn = document.querySelector("#gameBtn");
 
-    // 게임방법 되돌리기
+    // 메인 화면
     game.addEventListener("click", () => {
         if (bgStatus !== 1) return;
 
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         bgStatus = 0;
     });
 
-    // 게임방법
+    // 게임 방법
     howToBtn.addEventListener("click", () => {
         mainBg.src = "/assets/images/backgrounds/tutorial.png";
         howToBtn.style.display = "none";
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         steam.play();
     });
 
-    // BGM 재생
+    // BGM 재생 (위치, 반복 여부, BGM 길이)
     const player = new AudioPlayer("/assets/sounds/bgm/main.mp3", true, 4.324);
     await player.load();
     player.play();
