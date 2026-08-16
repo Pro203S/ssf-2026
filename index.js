@@ -1,18 +1,9 @@
-/**
- * 0이 메인화면, 1이 게임방법
- * 
- * @type {0 | 1}
- */
 let bgStatus = 0;
 
 document.addEventListener("DOMContentLoaded", async () => {
-    /** @type {HTMLDivElement} */
     const game = document.querySelector("#game");
-    /** @type {HTMLImageElement} */
     const mainBg = document.querySelector("#mainBg");
-    /** @type {HTMLButtonElement} */
     const howToBtn = document.querySelector("#howToBtn");
-    /** @type {HTMLLinkElement} */
     const gameBtn = document.querySelector("#gameBtn");
 
     // 게임방법 되돌리기
