@@ -86,7 +86,6 @@ const SFX_NOODLES = new AudioPlayer("/assets/sounds/sfx/noodles.mp3");
 const BGM = new AudioPlayer("/assets/sounds/bgm/game.mp3", true, 10.65);
 const BGM_SUCCESS = new AudioPlayer("/assets/sounds/bgm/good_end.mp3", true, 10.9);
 const BGM_FAIL = new AudioPlayer("/assets/sounds/bgm/bad_end.mp3");
-const BGM_FAIL_BUBBLES = new AudioPlayer("/assets/sounds/sfx/bad_end_bubbles.mp3");
 
 // ---------- 이미지 / 위치 데이터 ----------
 const backgrounds = {
@@ -122,10 +121,10 @@ const clickZones = [
     { id: ZONE_SOUP, x: 10, y: 20, width: 100, height: 50 },
     { id: ZONE_GREEN_ONION, x: 125, y: 20, width: 100, height: 50 },
     { id: ZONE_KETTLE, x: 290, y: 200, width: 100, height: 150 },
-    { id: ZONE_POT_4, x: 177, y: 195, width: 90, height: 70 },
     { id: ZONE_POT_1, x: 40, y: 195, width: 90, height: 70 },
-    { id: ZONE_POT_3, x: 145, y: 270, width: 90, height: 70 },
     { id: ZONE_POT_2, x: 5, y: 270, width: 90, height: 70 },
+    { id: ZONE_POT_3, x: 145, y: 270, width: 90, height: 70 },
+    { id: ZONE_POT_4, x: 177, y: 195, width: 90, height: 70 },
     { id: ZONE_TRAY, x: 370, y: 200, width: 200, height: 120 },
 ];
 
@@ -319,10 +318,6 @@ function endGame() {
         gameContainer.classList.add("game-failed");
         setBackground("failed");
         BGM_FAIL.play();
-        // 거품 소리는 1.93초 뒤에 재생
-        setTimeout(() => {
-            BGM_FAIL_BUBBLES.play();
-        }, 1930);
     }
 
     showScore();
@@ -507,7 +502,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await BGM.load();
     await BGM_SUCCESS.load();
     await BGM_FAIL.load();
-    await BGM_FAIL_BUBBLES.load();
 
     // BGM 재생
     await BGM.play();
